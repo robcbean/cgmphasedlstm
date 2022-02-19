@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#No guardmos en Git los parámetros de configuración ni las variables
+config.json
