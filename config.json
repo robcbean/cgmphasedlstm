@@ -11,10 +11,10 @@
     "model":
     {
             "model_folder" : "./models/",
-            "past_values" : "12",
-            "input_dim" : 1,
-            "hidden_dim" : 40,
-            "batch_size" : 250,
+            "past_values" : 12,
+            "input_dim" : 2,
+            "hidden_dim" : 64,
+            "batch_size" : 1,
             "use_lstm" : true,
             "outputl1" : 512,
             "dropout1" : 0.3,
@@ -27,7 +27,6 @@
      },
     "trainer":
     {
-        "batch_size" : 1,
         "epochs" : 40,
         "optimizer_name" : "adamw",
         "lr" : 1e-3

@@ -75,7 +75,7 @@ def storeScaler(_scaler,_model_name,_model_folder):
 
 def loadScaler(_model_name,_model_folder):
     filename = os.path.join(_model_folder, f'{_model_name}.p')
-    ret = pickle.load(filename)
+    ret = pickle.load(open(filename,'rb'))
     return ret
 
 class LoadData:
