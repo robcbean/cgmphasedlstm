@@ -1,0 +1,35 @@
+{
+    "send_message" : "True",
+    "wait_time" : "120",
+    "last_time_file" : "last_time.txt",
+    "glucose" :
+    {
+            "variation_percent" : "5",
+            "threshold_low" : "70",
+            "threshold_high" : "180"
+    },
+    "model":
+    {
+            "model_folder" : "./models/",
+            "past_values" : "12",
+            "input_dim" : 1,
+            "hidden_dim" : 40,
+            "batch_size" : 250,
+            "use_lstm" : true,
+            "outputl1" : 512,
+            "dropout1" : 0.3,
+            "outputl2": 256,
+            "dropout2": 0.3,
+            "exp_func" : true,
+            "nlf1" : "relu",
+            "nlf2" : "relu",
+            "batch_normalization" : false
+     },
+    "trainer":
+    {
+        "batch_size" : 1,
+        "epochs" : 40,
+        "optimizer_name" : "adamw",
+        "lr" : 1e-3
+    }
+}
