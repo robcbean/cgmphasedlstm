@@ -15,7 +15,11 @@ class FreeStyleML:
 
     def loadModel(self):
         ret = plstmglucosemodel.PlstmGlucoseModel(_input_dim=self.config.model.input_dim)
-        ret.load_state_dict(f'{self.config.model.model_folder}')
+        filename = os.path.join(self.config.model.model_folder,ret.getModelName())
+        if os.path.exists(filename):
+            ret.load_state_dict(filename)
+        else:
+            raise Exception(f'The model {filename} don''t exists.')
         return ret
 
     def processLoop(self):
