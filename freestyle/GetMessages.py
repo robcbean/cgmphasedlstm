@@ -18,7 +18,6 @@ class GetMessages:
         self.cg_interval_min = _min_interval
 
 
-
 class GetMessageFreeStle(GetMessages):
     def __init__(self,_user,_password,_past_values):
         super(GetMessageFreeStle, self).__init__(_user,_password,_past_values)

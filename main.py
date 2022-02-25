@@ -8,7 +8,7 @@ from phased_lstm import plstmglucosemodel
 from telegram import sender
 from freestyle import GetMessages
 
-class FreeStyleML:
+class CgmPhasedLSTM:
 
     def __init__(self, _config_file, _cont_glucose_user, _cont_glucose_pass):
         self.config = config.loadFromFile(_config_file)
@@ -51,8 +51,8 @@ if __name__ == "__main__":
 #    telegram_send.sendMessage("Hola Roberto")
 
 
-    freeStyleML = FreeStyleML(_config_file=configFile, _cont_glucose_user="robcbean@gmail.com",
-                              _cont_glucose_pass="pepe")
+    freeStyleML = CgmPhasedLSTM(_config_file=configFile, _cont_glucose_user="robcbean@gmail.com",
+                                _cont_glucose_pass="pepe")
     freeStyleML.processLoop()
 
 

@@ -4,6 +4,7 @@
     "last_time_file" : "last_time.txt",
     "glucose" :
     {
+            "cgm": "FreeStyle",
             "variation_percent" : "5",
             "threshold_low" : "70",
             "threshold_high" : "180"
