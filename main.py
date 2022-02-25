@@ -2,17 +2,19 @@
 import config
 import sys
 import os
-import pickle
 import torch
-from process_data.load_data import  loadScaler
+from process_data.load_data import loadScaler
 from phased_lstm import plstmglucosemodel
+from telegram import sender
+from freestyle import GetMessages
 
 class FreeStyleML:
 
-    def __init__(self,_config_file):
+    def __init__(self, _config_file, _cont_glucose_user, _cont_glucose_pass):
         self.config = config.loadFromFile(_config_file)
         self.model = self.loadModel()
         self.scaler = loadScaler(self.model.getModelName(),self.config.model.model_folder)
+        self.cgs =
 
     def loadModel(self):
         ret = plstmglucosemodel.PlstmGlucoseModel(_input_dim=self.config.model.input_dim
@@ -44,7 +46,13 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         configFile = sys.argv[2]
 
-    freeStyleML = FreeStyleML(configFile)
+
+#    telegram_send = sender.TelegramSender('-544880151','1508325328:AAFrEw0ODFV4osXQ-_ecTtnPwKK9ettpMbU')
+#    telegram_send.sendMessage("Hola Roberto")
+
+
+    freeStyleML = FreeStyleML(_config_file=configFile, _cont_glucose_user="robcbean@gmail.com",
+                              _cont_glucose_pass="pepe")
     freeStyleML.processLoop()
 
 
