@@ -14,7 +14,7 @@ class FreeStyleML:
         self.config = config.loadFromFile(_config_file)
         self.model = self.loadModel()
         self.scaler = loadScaler(self.model.getModelName(),self.config.model.model_folder)
-        self.cgs =
+        #self.cgs =
 
     def loadModel(self):
         ret = plstmglucosemodel.PlstmGlucoseModel(_input_dim=self.config.model.input_dim

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/v2freestyleml.iml" filepath="$PROJECT_DIR$/.idea/v2freestyleml.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/cgmphasedlstm.iml" filepath="$PROJECT_DIR$/.idea/cgmphasedlstm.iml" />
     </modules>
   </component>
 </project>
