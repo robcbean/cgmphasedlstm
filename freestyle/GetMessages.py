@@ -145,17 +145,20 @@ class GetMessageFreeStle(GetMessages):
                     send_values.append(glucose_value)
                     send_dates.append(date_value)
 
-        ret = pd.Series(cont_values, index=cont_values)
-        ret = ret.sort_index()
+        ret_c = pd.Series(cont_values, index=cont_dates)
+        ret_c = ret_c.sort_index()
 
-        return ret
+        ret_s = pd.Series(send_values, index=send_dates)
+        ret_s = ret_s.sort_index()
+
+        return ret_c,ret_s
 
     def getLastResult(self):
         token_login = self.__tokenLogin__()
         url_reports = self.__getUrlReports__(self.__reportURL(), self.__reportString__(),token_login)
         data_result = self.__getDataResult__(url_reports,token_login)
-        ret = self.__getDataResultsProcessed__(data_result)
-        return ret
+        ret_c,ret_s = self.__getDataResultsProcessed__(data_result)
+        return ret_c, ret_s
 
 
 

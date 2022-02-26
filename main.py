@@ -45,7 +45,7 @@ class CgmPhasedLSTM:
         return ret
 
     def processLoop(self):
-        data = self.cgs.getLastResult()
+        data_c, data_s = self.cgs.getLastResult()
 
 if __name__ == "__main__":
     configFile = "config.json"
