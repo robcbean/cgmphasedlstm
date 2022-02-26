@@ -117,35 +117,38 @@ class GetMessageFreeStle(GetMessages):
         return ret
 
     def __getDataResultsProcessed__(self,_data_result):
+
         cont_values = []
         cont_dates = []
         send_values = []
         send_dates = []
+
         hours_to_add = self.__timeToAdd__()
         for day in _data_result:
             cont_data = day['Glucose']
-            for data in cont_data:
-                for value in data:
-                    time_value = int(value['Timestamp'])
+            for data_c in cont_data:
+                for value_c in data_c:
+                    time_value = int(value_c['Timestamp'])
                     date_value = datetime.datetime.fromtimestamp(time_value) + hours_to_add
                     if date_value.hour != 0 and date_value.minute != 0 and date_value.second != 0:  # RBC 12/09/21 quito los valores exactos están mal
-                        glucose_value = int(value['Value'])
+                        glucose_value = int(value_c['Value'])
                         cont_dates.append(date_value)
                         cont_values.append(glucose_value)
             sen_data = day['SensorScans']
-            for data in sen_data:
-                for value in data:
-                    val = value['Timestamp']
-                    time_value = int(val)
-                    date_value = datetime.datetime.fromtimestamp(time_value) + hours_to_add
-                    if date_value.hour != 0 and date_value.minute != 0 and date_value.second != 0:  # RBC 12/09/21 quito los valores exactos están mal
-                        glucose_value = int(value['Value'])
-                        send_values.append(date_value)
-                        send_dates.append(glucose_value)
+            for data_s in sen_data:
+                val = data_s['Timestamp']
+                time_value = int(val)
+                date_value = datetime.datetime.fromtimestamp(time_value)
+                date_value = date_value  + hours_to_add
+                if date_value.hour != 0 and date_value.minute != 0 and date_value.second != 0:  # RBC 12/09/21 quito los valores exactos están mal
+                    glucose_value = int(data_s['Value'])
+                    send_values.append(glucose_value)
+                    send_dates.append(date_value)
 
-        ret = pd.Series(cont_values, index=cont_dates)
-
+        ret = pd.Series(cont_values, index=cont_values)
         ret = ret.sort_index()
+
+        return ret
 
     def getLastResult(self):
         token_login = self.__tokenLogin__()
