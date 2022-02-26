@@ -9,7 +9,7 @@
                         ,"LowGlucoseThreshold":70
                         ,"PrimaryDeviceId":"4526af16-3f3b-11ec-8229-0242ac110002"
                         ,"PrimaryDeviceTypeId":40066
-                        ,"PrintReportsWithPatientInformation": True
+                        ,"PrintReportsWithPatientInformation": true
                         ,"ReportIds":[2640066,140066,1640066,2040066,540066,840066,1040066,1440066]
                         ,"SecondaryDeviceIds":["4a8b0cb8-9850-11e9-851e-0242ac110003"]
                         ,"TertiaryDeviceIds":[]
@@ -26,5 +26,5 @@
                         ,"GlucosePatternInsightsLunchHours":12
                         ,"GlucosePatternInsightsDinnerHours":18
                         ,"GlucosePatternInsightsBedtimeHours":22
-                        ,"GlucosePatternInsightsLowGlucoseAllowance":1,"GlucosePatternsInsightsShowIndividualDataPoints":False,"GlucosePatternInsightsMedianGoal":154,"MealtimePatternsPreMealTargetRangeLow":70,"MealtimePatternsPreMealTargetRangeHigh":130,"MealtimePatternsPostMealTargetRangeLow":100,"MealtimePatternsPostMealTargetRangeHigh":180,"ClientReportIDs":[26,1,16,20,5,8,10,14]
+                        ,"GlucosePatternInsightsLowGlucoseAllowance":1,"GlucosePatternsInsightsShowIndividualDataPoints":false,"GlucosePatternInsightsMedianGoal":154,"MealtimePatternsPreMealTargetRangeLow":70,"MealtimePatternsPreMealTargetRangeHigh":130,"MealtimePatternsPostMealTargetRangeLow":100,"MealtimePatternsPostMealTargetRangeHigh":180,"ClientReportIDs":[26,1,16,20,5,8,10,14]
 }

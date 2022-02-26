@@ -9,7 +9,6 @@ from mako.template import Template
 from lxml import html
 import platform
 import pandas as pd
-import numpy as np
 
 
 class GetMessages:
@@ -40,7 +39,7 @@ class GetMessageFreeStle(GetMessages):
         self.report_string_template = _report_string_template
 
     def __loginURL__(self):
-        ret = f'{urljoin(self.base_url,"/auth/login/")}'
+        ret = f'{urljoin(self.base_url,"auth/login")}'
         return ret
 
     def __timeToAdd__(self):
@@ -68,7 +67,9 @@ class GetMessageFreeStle(GetMessages):
         return ret
 
     def __tokenLogin__(self):
-        response_login = requests.post(self.__loginURL__(), json=self.__loginParams__()).json()
+        login_url = self.__loginURL__()
+        params = self.__loginParams__()
+        response_login = requests.post(login_url, json=params).json()
         ret = response_login['data']['authTicket']['token']
         return ret
 
@@ -78,7 +79,8 @@ class GetMessageFreeStle(GetMessages):
         if not os.path.exists(self.report_string_template):
             raise Exception(f'The report string template file {self.report_string_template} don''exists')
         template = Template(filename=self.report_string_template)
-        ret = json.load(template.render())
+        template_rended = template.render(today_date=today_date,start_date=start_date)
+        ret = json.loads(template_rended)
         return ret
 
     def __getUrlReports__(self,_report_url,_reports_string,_token_login):
@@ -115,29 +117,42 @@ class GetMessageFreeStle(GetMessages):
         return ret
 
     def __getDataResultsProcessed__(self,_data_result):
-        values = []
-        dates = []
+        cont_values = []
+        cont_dates = []
+        send_values = []
+        send_dates = []
         hours_to_add = self.__timeToAdd__()
         for day in _data_result:
-            glucose_data = day['Glucose']
-            for data in glucose_data:
+            cont_data = day['Glucose']
+            for data in cont_data:
                 for value in data:
                     time_value = int(value['Timestamp'])
                     date_value = datetime.datetime.fromtimestamp(time_value) + hours_to_add
                     if date_value.hour != 0 and date_value.minute != 0 and date_value.second != 0:  # RBC 12/09/21 quito los valores exactos están mal
                         glucose_value = int(value['Value'])
-                        dates.append(date_value)
-                        values.append(glucose_value)
+                        cont_dates.append(date_value)
+                        cont_values.append(glucose_value)
+            sen_data = day['SensorScans']
+            for data in sen_data:
+                for value in data:
+                    val = value['Timestamp']
+                    time_value = int(val)
+                    date_value = datetime.datetime.fromtimestamp(time_value) + hours_to_add
+                    if date_value.hour != 0 and date_value.minute != 0 and date_value.second != 0:  # RBC 12/09/21 quito los valores exactos están mal
+                        glucose_value = int(value['Value'])
+                        send_values.append(date_value)
+                        send_dates.append(glucose_value)
 
-        ret = pd.Series(values, index=dates)
+        ret = pd.Series(cont_values, index=cont_dates)
 
         ret = ret.sort_index()
 
     def getLastResult(self):
         token_login = self.__tokenLogin__()
-        url_reports = self.__getUrlReports__(self.__reportURL(), self.__reportString__())
-        data_result = self.__getDataResult__(url_reports)
-        ret = self.__getDataResult__(data_result)
+        url_reports = self.__getUrlReports__(self.__reportURL(), self.__reportString__(),token_login)
+        data_result = self.__getDataResult__(url_reports,token_login)
+        ret = self.__getDataResultsProcessed__(data_result)
+        return ret
 
 
 
