@@ -6,6 +6,7 @@ import torch
 from process_data.load_data import loadScaler
 from phased_lstm import plstmglucosemodel
 from telegram import sender
+from vault import credentials
 from freestyle import GetMessages
 
 class CgmPhasedLSTM:
@@ -52,14 +53,12 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         configFile = sys.argv[2]
 
-
-#    telegram_send = sender.TelegramSender('-544880151','1508325328:AAFrEw0ODFV4osXQ-_ecTtnPwKK9ettpMbU')
-#    telegram_send.sendMessage("Hola Roberto")
-
-
+    vault_cred_mgr = credentials.CredentialsManagerVault()
+    telegram_send = sender.TelegramSender(vault_cred_mgr.telegram_chat,vault_cred_mgr.telegram_token)
+    telegram_send.sendMessage("Hola Roberto")
     freeStyleML = CgmPhasedLSTM(_config_file=configFile,
-                                _cont_glucose_user="robcbean@gmail.com",
-                                _cont_glucose_pass="Gandalf#07")
+                                _cont_glucose_user=vault_cred_mgr.glucose_user,
+                                _cont_glucose_pass=vault_cred_mgr.glucose_password)
     freeStyleML.processLoop()
 
 
