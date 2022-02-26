@@ -4,7 +4,8 @@
     "last_time_file" : "last_time.txt",
     "glucose" :
     {
-            "cgm": "FreeStyle",
+            "freetyle_fingerprint" : "3,(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/Safari/,Mozilla/(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/Safari/,AppleGPU,Europe/Madrid,1,MacIntel,es-ES,es-ES,AppleComputer,Inc.,safari",
+            "freetyle_baseurl": "https://api-eu.libreview.io/",
             "variation_percent" : "5",
             "threshold_low" : "70",
             "threshold_high" : "180"

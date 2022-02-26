@@ -18,8 +18,8 @@ class CgmPhasedLSTM:
         self.cgs = GetMessages.GetMessageFreeStle(  _past_values=self.config.model.past_values
                                                     ,_password=_cont_glucose_pass
                                                     ,_user=_cont_glucose_user
-                                                    ,_finger_print="3,(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/Safari/,Mozilla/(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/Safari/,AppleGPU,Europe/Madrid,1,MacIntel,es-ES,es-ES,AppleComputer,Inc.,safari"
-                                                    ,_base_url="https://api-eu.libreview.io/"
+                                                    ,_finger_print= self.config.glucose.freetyle_fingerprint
+                                                    ,_base_url= self.config.glucose.freetyle_baseurl
                                                     ,_report_string_template="report_string.json"
                                                 )
 
