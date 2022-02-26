@@ -14,7 +14,13 @@ class CgmPhasedLSTM:
         self.config = config.loadFromFile(_config_file)
         self.model = self.loadModel()
         self.scaler = loadScaler(self.model.getModelName(),self.config.model.model_folder)
-        #self.cgs =
+        self.cgs = GetMessages.GetMessageFreeStle(  _past_values=self.config.model.past_values
+                                                    ,_password=_cont_glucose_pass
+                                                    ,_user=_cont_glucose_user
+                                                    ,_finger_print="3,(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/Safari/,Mozilla/(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/Safari/,AppleGPU,Europe/Madrid,1,MacIntel,es-ES,es-ES,AppleComputer,Inc.,safari"
+                                                    ,_base_url="https://api-eu.libreview.io/"
+                                                    ,_report_string_template="report_string.json"
+                                                )
 
     def loadModel(self):
         ret = plstmglucosemodel.PlstmGlucoseModel(_input_dim=self.config.model.input_dim
@@ -39,7 +45,7 @@ class CgmPhasedLSTM:
         return ret
 
     def processLoop(self):
-        pass
+        data = self.cgs.getLastResult()
 
 if __name__ == "__main__":
     configFile = "config.json"
@@ -51,8 +57,9 @@ if __name__ == "__main__":
 #    telegram_send.sendMessage("Hola Roberto")
 
 
-    freeStyleML = CgmPhasedLSTM(_config_file=configFile, _cont_glucose_user="robcbean@gmail.com",
-                                _cont_glucose_pass="pepe")
+    freeStyleML = CgmPhasedLSTM(_config_file=configFile,
+                                _cont_glucose_user="robcbean@gmail.com",
+                                _cont_glucose_pass="Gandalf#07")
     freeStyleML.processLoop()
 
 

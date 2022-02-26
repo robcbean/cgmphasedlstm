@@ -1,28 +1,34 @@
+import sys
 from  urllib.parse import urljoin
 import requests
 import datetime
 import os
+import time
 import json
 from mako.template import Template
+from lxml import html
+import platform
+import pandas as pd
+import numpy as np
+
 
 class GetMessages:
-
-
     def __init__(self,_user,_password,_past_values):
         self.user = _user
         self.password = _password
         self.past_values = _past_values
-        self.cg_interval_min = 0
+        self.cg_interval_min_p = 0
     def getLastResult(self):
         raise Exception('getLastResult not implemented')
     @property
     def cg_interval_min(self):
-        if self.min_interval == 0:
+        if self.cg_interval_min_p == 0:
             raise  Exception('Continuos Glusose Interval not set.')
+        return self.cg_interval_min_p
 
     @cg_interval_min.setter
-    def cg_interval_min(self, _min_interval):
-        self.cg_interval_min = _min_interval
+    def cg_interval_min(self, _cg_interval_min):
+        self.cg_interval_min_p = _cg_interval_min
 
 
 class GetMessageFreeStle(GetMessages):
@@ -35,6 +41,17 @@ class GetMessageFreeStle(GetMessages):
 
     def __loginURL__(self):
         ret = f'{urljoin(self.base_url,"/auth/login/")}'
+        return ret
+
+    def __timeToAdd__(self):
+        if platform.system().lower() == "linux":
+            ret = datetime.timedelta(hours=-2)
+        else:
+            ret = datetime.timedelta(hours=+-2)
+        return ret
+
+    def __reportURL(self):
+        ret = f'{urljoin(self.base_url,"/reports")}'
         return ret
 
     def __loginParams__(self):
@@ -51,7 +68,7 @@ class GetMessageFreeStle(GetMessages):
         return ret
 
     def __tokenLogin__(self):
-        response_login = requests.post(self.__loginURL__(), self.__loginParams__()).json()
+        response_login = requests.post(self.__loginURL__(), json=self.__loginParams__()).json()
         ret = response_login['data']['authTicket']['token']
         return ret
 
@@ -64,11 +81,63 @@ class GetMessageFreeStle(GetMessages):
         ret = json.load(template.render())
         return ret
 
+    def __getUrlReports__(self,_report_url,_reports_string,_token_login):
+        token_header = {'Authorization': 'Bearer ' + _token_login}
+        response_reports = requests.post(_report_url, json=_reports_string, headers=token_header).json()
+        ret = response_reports['data']['url']
+        return ret
+
+    def __getDataResult__(self,_url_reports,_token_login):
+
+        options_report_first = requests.options(_url_reports)
+        if options_report_first == "":
+            pass
+
+        options_report_second = requests.get(_url_reports).json()
+        time.sleep(2)
+
+        url_lp = options_report_second['data']['lp']
+        report_url_json = requests.get(url_lp).json()
+
+        if 'urls' in report_url_json['args'].keys():
+            report_url = report_url_json['args']['urls']['10'] + '?session=' + _token_login
+            resport_result = requests.get(report_url)
+            time.sleep(2)
+        else:
+            sys.stderr.write(f'Error {report_url_json["args"].keys()}')
+            return self.getLastResult()
+
+        tree = html.fromstring(resport_result.content)
+        json_string_data = \
+            tree.xpath("/html/head/script[contains(text(),'DataForLibreWeeklySummary')]")[0].text.split(';')[1].split('=')[1]
+        ret = json.loads(json_string_data)['Data']['Days']
+
+        return ret
+
+    def __getDataResultsProcessed__(self,_data_result):
+        values = []
+        dates = []
+        hours_to_add = self.__timeToAdd__()
+        for day in _data_result:
+            glucose_data = day['Glucose']
+            for data in glucose_data:
+                for value in data:
+                    time_value = int(value['Timestamp'])
+                    date_value = datetime.datetime.fromtimestamp(time_value) + hours_to_add
+                    if date_value.hour != 0 and date_value.minute != 0 and date_value.second != 0:  # RBC 12/09/21 quito los valores exactos están mal
+                        glucose_value = int(value['Value'])
+                        dates.append(date_value)
+                        values.append(glucose_value)
+
+        ret = pd.Series(values, index=dates)
+
+        ret = ret.sort_index()
 
     def getLastResult(self):
         token_login = self.__tokenLogin__()
-        #ret = range(1,self.past_values)
-        #return ret
+        url_reports = self.__getUrlReports__(self.__reportURL(), self.__reportString__())
+        data_result = self.__getDataResult__(url_reports)
+        ret = self.__getDataResult__(data_result)
 
 
 
