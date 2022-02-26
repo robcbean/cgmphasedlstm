@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="CG">
-      <change afterPath="$PROJECT_DIR$/vault/credentials.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="Vault">
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -99,7 +97,7 @@
       <workItem from="1645875014768" duration="1034000" />
       <workItem from="1645883029621" duration="1135000" />
       <workItem from="1645889485171" duration="2017000" />
-      <workItem from="1645891535458" duration="916000" />
+      <workItem from="1645891535458" duration="1034000" />
     </task>
     <task id="LOCAL-00001" summary="Testing">
       <created>1645862300438</created>
@@ -136,7 +134,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645883491568</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Vault">
+      <created>1645892467565</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1645892467565</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,7 +162,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Testing" />
     <MESSAGE value="CG" />
-    <option name="LAST_COMMIT_MESSAGE" value="CG" />
+    <MESSAGE value="Vault" />
+    <option name="LAST_COMMIT_MESSAGE" value="Vault" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
