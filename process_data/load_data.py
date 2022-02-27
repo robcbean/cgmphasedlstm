@@ -39,6 +39,15 @@ class Scaler:
         self.scaler = _scaler
         self.scaler_function = self.__getScaler__(self.scaler)
 
+    def transform_values(self,_values):
+        ret = _values
+        if self.scaler == ScalerValues.MinMaxScaler:
+            ret = (ret - self.scaler_function.data_min_) /  (self.scaler_function.data_max_ - self.scaler_function.data_min_)
+        elif self.scaler == ScalerValues.StandardScaler:
+            ret = (ret - self.scaler_function.mean_) / self.scaler_function.std_
+
+        return ret
+
     def inverse_transform_value(self,_value):
         ret = _value
         if self.scaler == ScalerValues.MinMaxScaler:
@@ -201,21 +210,19 @@ class LoadData:
         series_data_periodic, series_data_puntal = self.get_series_data_df(self.get_raw_data_df())
         xs_tmp, xt, ys = self.split_data_in_steps(series_data_periodic)
 
-        xs = self.extract_extra_xs(xs_tmp, xt, series_data_puntal)
-
-        xt_t = xt.copy()
-
-        for i in range(0, xt.shape[0] - 1):
-            new_val = np.array(range(0, xt.shape[1])).astype(float)
-            xt[i] = new_val
+        xs, xt_t = self.get_extra_data(series_data_puntal, xs_tmp, xt)
 
         sys.stderr.write("Load data_load sucessfully..\n")
 
         return xs, xt, xt_t, ys
 
-
-
-
+    def get_extra_data(self, series_data_puntal, xs_tmp, xt):
+        xs = self.extract_extra_xs(xs_tmp, xt, series_data_puntal)
+        xt_t = xt.copy()
+        for i in range(0, xt.shape[0] - 1):
+            new_val = np.array(range(0, xt.shape[1])).astype(float)
+            xt[i] = new_val
+        return xs, xt_t
 
 
 def split_all_data(xs, xt, xt_t, ys, train_fraction, valid_fraction):

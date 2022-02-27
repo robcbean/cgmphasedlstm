@@ -147,9 +147,11 @@ class GetMessageFreeStle(GetMessages):
 
         ret_c = pd.Series(cont_values, index=cont_dates)
         ret_c = ret_c.sort_index()
+        ret_c.index.name = 'time'
 
         ret_s = pd.Series(send_values, index=send_dates)
         ret_s = ret_s.sort_index()
+        ret_s.index.name = 'time'
 
         return ret_c,ret_s
 

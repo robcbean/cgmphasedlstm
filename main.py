@@ -8,6 +8,7 @@ from phased_lstm import plstmglucosemodel
 from telegram import sender
 from vault import credentials
 from freestyle import GetMessages
+from process_data.load_data import LoadData
 
 class CgmPhasedLSTM:
 
@@ -22,6 +23,8 @@ class CgmPhasedLSTM:
                                                     ,_base_url= self.config.glucose.freetyle_baseurl
                                                     ,_report_string_template="report_string.json"
                                                 )
+        self.loader = LoadData()
+        self.loader.__init_parameters__("",self.scaler,self.model.past_values,self.config.model.future_steps,self.config.model.time_range_minutes)
 
     def loadModel(self):
         ret = plstmglucosemodel.PlstmGlucoseModel(_input_dim=self.config.model.input_dim
@@ -45,8 +48,25 @@ class CgmPhasedLSTM:
             raise Exception(f'The model {filename} don''t exists.')
         return ret
 
+    def prepareData(self,_data_c,_data_s):
+        xs_tmp, xt, ys = self.loader.split_data_in_steps(_data_c)
+        xs, xt_t = self.loader.get_extra_data(_data_s,xs_tmp,xt)
+        return xs, xt, xt_t, ys
+
     def processLoop(self):
         data_c, data_s = self.cgs.getLastResult()
+        xs, xt, xt_t, ys = self.prepareData(data_c,data_s)
+        last_n = xs.shape[0]
+        xs_p = xs[last_n-1]
+        ys_p = ys[last_n-1]
+        ys_p = self.scaler.transform_values(ys_p)
+        output = self.model.predict(xs_p,ys_p)
+        ret = self.scaler.inverse_transform_value(output.item())[0]
+        return ret
+
+
+
+
 
 if __name__ == "__main__":
     configFile = "config.json"
