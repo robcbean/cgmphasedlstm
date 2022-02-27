@@ -46,7 +46,7 @@ class GetMessageFreeStle(GetMessages):
         if platform.system().lower() == "linux":
             ret = datetime.timedelta(hours=-2)
         else:
-            ret = datetime.timedelta(hours=+-2)
+            ret = datetime.timedelta(hours=-1)
         return ret
 
     def __reportURL(self):
@@ -75,6 +75,7 @@ class GetMessageFreeStle(GetMessages):
 
     def __reportString__(self):
         today_date = int((datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds())
+        #today_date = int((datetime.datetime.now(datetime.timezone.utc) - datetime.datetime(1970, 1, 1)).total_seconds())
         start_date = today_date - (24 * 60 * 60 + 60)
         if not os.path.exists(self.report_string_template):
             raise Exception(f'The report string template file {self.report_string_template} don''exists')

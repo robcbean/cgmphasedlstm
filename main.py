@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import numpy as np
+
 import config
 import sys
 import os
@@ -48,25 +50,37 @@ class CgmPhasedLSTM:
             raise Exception(f'The model {filename} don''t exists.')
         return ret
 
+    def scaleData(self,_data):
+        ret = self.scaler.transform_values(_data)
+        return  ret;
+
     def prepareData(self,_data_c,_data_s):
-        xs_tmp, xt, ys = self.loader.split_data_in_steps(_data_c)
-        xs, xt_t = self.loader.get_extra_data(_data_s,xs_tmp,xt)
-        last_n = xs.shape[0]
-        xs_p = xs[last_n-1]
-        xt_p = xt[0]
-        return xs_p,xt_p
+        n_records = _data_c.shape[0]
+        values_to_pred = _data_c[(n_records-1-self.model.past_values):(n_records-1)]
+        cgm_values = values_to_pred.values
+        cgm_values_scaled = self.scaler.transform_values(cgm_values)
+        cgm_time = values_to_pred.index
+        extra_xs = np.zeros(self.model.past_values)
+        for i in range(0,self.model.past_values-1):
+            cur_time = cgm_time[i]
+            extra_xs[i] = self.loader.find_prev_value(cur_time,_data_s)
+            if extra_xs[i] != 0:
+                extra_xs[i] = self.scaler.transform_values(extra_xs[i])
+        cgm_values_and_measures = np.concatenate((cgm_values_scaled, extra_xs), axis=None)
+        cgm_values_and_measures = np.reshape(cgm_values_and_measures, (-1, 12))
+        cgm_values_and_measures = cgm_values_and_measures.transpose()
+        cgm_time_pred = np.array(range(0, self.model.past_values)).astype(float)
 
+        return cgm_values_and_measures, cgm_time_pred, cgm_time
 
-
-        #return xs, xt, xt_t, ys
 
     def processLoop(self):
         data_c, data_s = self.cgs.getLastResult()
-        xs, xt = self.prepareData(data_c,data_s)
+        xs, xt, xt_t = self.prepareData(data_c,data_s)
         output = self.model.predict(xs,xt)
         ret = self.scaler.inverse_transform_value(output.item())[0]
-        print(ret)
-        return ret
+        print(f'pred:{ret}, {self.scaler.inverse_transform_value(xs)} {xt_t}')
+        #return ret
 
 
 
