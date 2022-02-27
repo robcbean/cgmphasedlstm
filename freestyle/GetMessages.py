@@ -74,11 +74,11 @@ class GetMessageFreeStle(GetMessages):
         return ret
 
     def __reportString__(self):
-        today_date = int((datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds())
+        today_date = int((datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds()) 
         #today_date = int((datetime.datetime.now(datetime.timezone.utc) - datetime.datetime(1970, 1, 1)).total_seconds())
         start_date = today_date - (24 * 60 * 60 + 60)
         if not os.path.exists(self.report_string_template):
-            raise Exception(f'The report string template file {self.report_string_template} don''exists')
+            raise Exception(f'The report string template file {self.report_string_template} don''t exists.')
         template = Template(filename=self.report_string_template)
         template_rended = template.render(today_date=today_date,start_date=start_date)
         ret = json.loads(template_rended)

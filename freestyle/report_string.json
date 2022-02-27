@@ -2,7 +2,7 @@
                         "Country":"ES"
                         ,"CultureCode":"es-ES"
                         ,"CultureCodeCommunication":"es-ES"
-                        ,"DateFormat":2
+                        ,"DateFormat":1
                         ,"EndDate": ${today_date}
                         ,"GlucoseUnits":1
                         ,"HighGlucoseThreshold":250

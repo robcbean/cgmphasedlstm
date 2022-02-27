@@ -56,7 +56,7 @@ class CgmPhasedLSTM:
 
     def prepareData(self,_data_c,_data_s):
         n_records = _data_c.shape[0]
-        values_to_pred = _data_c[(n_records-1-self.model.past_values):(n_records-1)]
+        values_to_pred = _data_c[(n_records-self.model.past_values):(n_records)]
         cgm_values = values_to_pred.values
         cgm_values_scaled = self.scaler.transform_values(cgm_values)
         cgm_time = values_to_pred.index
