@@ -51,17 +51,21 @@ class CgmPhasedLSTM:
     def prepareData(self,_data_c,_data_s):
         xs_tmp, xt, ys = self.loader.split_data_in_steps(_data_c)
         xs, xt_t = self.loader.get_extra_data(_data_s,xs_tmp,xt)
-        return xs, xt, xt_t, ys
+        last_n = xs.shape[0]
+        xs_p = xs[last_n-1]
+        xt_p = xt[0]
+        return xs_p,xt_p
+
+
+
+        #return xs, xt, xt_t, ys
 
     def processLoop(self):
         data_c, data_s = self.cgs.getLastResult()
-        xs, xt, xt_t, ys = self.prepareData(data_c,data_s)
-        last_n = xs.shape[0]
-        xs_p = xs[last_n-1]
-        ys_p = ys[last_n-1]
-        ys_p = self.scaler.transform_values(ys_p)
-        output = self.model.predict(xs_p,ys_p)
+        xs, xt = self.prepareData(data_c,data_s)
+        output = self.model.predict(xs,xt)
         ret = self.scaler.inverse_transform_value(output.item())[0]
+        print(ret)
         return ret
 
 
