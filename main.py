@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import datetime
+
 import numpy as np
 
 import config
@@ -11,6 +13,7 @@ from telegram import sender
 from vault import credentials
 from freestyle import GetMessages
 from process_data.load_data import LoadData
+import matplotlib.pyplot as plt
 
 class CgmPhasedLSTM:
 
@@ -74,23 +77,49 @@ class CgmPhasedLSTM:
 
         return cgm_values_and_measures, cgm_time_pred, cgm_time
 
+    def generate_image(self,_x_values_time, _y_values, _x_next_value, _y_next_value):
+        x_values = _x_values_time.values
+        x_values = np.insert(x_values, len(x_values), _x_next_value)
+        y_values = _y_values
+        y_values = np.insert(y_values, len(y_values), _y_next_value)
+        y_values = y_values.round(2)
 
-    def sendMessageToTelegram(self,_last_value,_pred_value):
-        return True
+        fig = plt.figure()
+        plt.xlabel("Dia/Hora")
+        plt.ylabel("Glucosa")
 
+        for i, j in zip(x_values, y_values):
+            plt.annotate(str(j), xy=(i, j))
 
+        plt.plot(x_values, y_values)
+        ret = "image.png"
+        plt.savefig(ret)
+
+        return ret
+
+    def glucoseInRange(self, _last_value, _pred_value):
+        return False
+
+    def sendMessageToTelegram(self,_xt_t,_xs,_last_value,_pred_value):
+        last_time = _xt_t[_xs.shape[0]-1]
+        next_time =  last_time + datetime.timedelta(minutes=self.config.model.time_range_minutes)
+
+        msg = f'Actual glucose {_last_value} at {last_time} next glucose {_pred_value} at {next_time}'
+        sys.stderr.write(msg)
+        self.telegram_send.sendMessage(msg)
+        self.telegram_send.sendImage(
+            os.path.join(os.getcwd(), self.generate_image(_xt_t, self.scaler.inverse_transform_value(np.transpose(_xs)[0]), next_time, _pred_value))
+        )
+        #(_x_values_time, _y_values, _x_next_value, _y_next_value
 
     def processLoop(self):
         data_c, data_s = self.cgs.getLastResult()
         xs, xt, xt_t = self.prepareData(data_c,data_s)
-        last_value = self.scaler.inverse_transform_value(xs[xs.shape[0]-1])[0]
-        last_time = xt_t[xs.shape[0]-1]
         output = self.model.predict(xs,xt)
+        last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
         pred_value = self.scaler.inverse_transform_value(output.item())[0]
-        if self.sendMessageToTelegram(last_value,pred_value):
-            msg = f'Actual glucose {last_value} {last_time} next glucose {pred_value}'
-            sys.stderr.write(msg)
-            self.telegram_send.sendMessage(msg)
+        if not self.glucoseInRange(last_value, pred_value):
+            self.sendMessageToTelegram(xt_t,xs,last_value,pred_value)
 
 
 
