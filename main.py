@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import datetime
-
+import time
 import numpy as np
-
 import config
 import sys
 import os
@@ -98,13 +97,26 @@ class CgmPhasedLSTM:
         return ret
 
     def glucoseInRange(self, _last_value, _pred_value):
-        return False
+        ret = True
+        if _pred_value != 0:
+            variation = (_last_value - _pred_value) / _pred_value * 100
+        else:
+            variation = 0
 
-    def sendMessageToTelegram(self,_xt_t,_xs,_last_value,_pred_value):
-        last_time = _xt_t[_xs.shape[0]-1]
-        next_time =  last_time + datetime.timedelta(minutes=self.config.model.time_range_minutes)
+        if _pred_value > self.config.glucose.threshold_high:
+            ret = False
+        elif _pred_value < self.config.glucose.threshold_low:
+            ret = False
+        elif variation > self.config.glucose.variation_percent:
+            ret = False
 
-        msg = f'Actual glucose {_last_value} at {last_time} next glucose {_pred_value} at {next_time}'
+        return ret
+
+    def sendMessageToTelegram(self,_xt_t,_xs,_last_value,_pred_value,_last_time):
+
+        next_time =  _last_time + datetime.timedelta(minutes=self.config.model.time_range_minutes)
+
+        msg = f'Actual glucose {_last_value} at {_last_time} next glucose {_pred_value} at {next_time}'
         sys.stderr.write(msg)
         self.telegram_send.sendMessage(msg)
         self.telegram_send.sendImage(
@@ -113,15 +125,22 @@ class CgmPhasedLSTM:
         #(_x_values_time, _y_values, _x_next_value, _y_next_value
 
     def processLoop(self):
-        data_c, data_s = self.cgs.getLastResult()
-        xs, xt, xt_t = self.prepareData(data_c,data_s)
-        output = self.model.predict(xs,xt)
-        last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
-        pred_value = self.scaler.inverse_transform_value(output.item())[0]
-        if not self.glucoseInRange(last_value, pred_value):
-            self.sendMessageToTelegram(xt_t,xs,last_value,pred_value)
+        prev_last_time  = None
+        while True:
 
-
+            data_c, data_s = self.cgs.getLastResult()
+            xs, xt, xt_t = self.prepareData(data_c,data_s)
+            output = self.model.predict(xs,xt)
+            last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
+            last_time = xt_t[xt_t.shape[0] - 1]
+            sys.stderr.write(f'Prev. last time:{prev_last_time}\tLast time{last_time}\n')
+            if prev_last_time == None or last_time > prev_last_time:
+                pred_value = self.scaler.inverse_transform_value(output.item())[0]
+                sys.stderr.write(f'Last value: {last_value} prev_value {pred_value}\n')
+                if not self.glucoseInRange(last_value, pred_value) or True:
+                    self.sendMessageToTelegram(xt_t,xs,last_value,pred_value,last_time)
+            time.sleep(self.config.wait_time)
+            prev_last_time = last_time
 
 
 
