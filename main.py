@@ -14,7 +14,7 @@ from process_data.load_data import LoadData
 
 class CgmPhasedLSTM:
 
-    def __init__(self, _config_file, _cont_glucose_user, _cont_glucose_pass):
+    def __init__(self, _config_file, _cont_glucose_user, _cont_glucose_pass,_telegram_chat,_telegram_token):
         self.config = config.loadFromFile(_config_file)
         self.model = self.loadModel()
         self.scaler = loadScaler(self.model.getModelName(),self.config.model.model_folder)
@@ -25,6 +25,7 @@ class CgmPhasedLSTM:
                                                     ,_base_url= self.config.glucose.freetyle_baseurl
                                                     ,_report_string_template="report_string.json"
                                                 )
+        self.telegram_send = sender.TelegramSender(_telegram_chat, _telegram_token)
         self.loader = LoadData()
         self.loader.__init_parameters__("",self.scaler,self.model.past_values,self.config.model.future_steps,self.config.model.time_range_minutes)
 
@@ -74,13 +75,23 @@ class CgmPhasedLSTM:
         return cgm_values_and_measures, cgm_time_pred, cgm_time
 
 
+    def sendMessageToTelegram(self,_last_value,_pred_value):
+        return True
+
+
+
     def processLoop(self):
         data_c, data_s = self.cgs.getLastResult()
         xs, xt, xt_t = self.prepareData(data_c,data_s)
+        last_value = self.scaler.inverse_transform_value(xs[xs.shape[0]-1])[0]
+        last_time = xt_t[xs.shape[0]-1]
         output = self.model.predict(xs,xt)
-        ret = self.scaler.inverse_transform_value(output.item())[0]
-        print(f'pred:{ret}, {self.scaler.inverse_transform_value(xs)} {xt_t}')
-        #return ret
+        pred_value = self.scaler.inverse_transform_value(output.item())[0]
+        if self.sendMessageToTelegram(last_value,pred_value):
+            msg = f'Actual glucose {last_value} {last_time} next glucose {pred_value}'
+            sys.stderr.write(msg)
+            self.telegram_send.sendMessage(msg)
+
 
 
 
@@ -92,10 +103,12 @@ if __name__ == "__main__":
         configFile = sys.argv[2]
 
     vault_cred_mgr = credentials.CredentialsManagerVault()
-    telegram_send = sender.TelegramSender(vault_cred_mgr.telegram_chat,vault_cred_mgr.telegram_token)
+
     freeStyleML = CgmPhasedLSTM(_config_file=configFile,
                                 _cont_glucose_user=vault_cred_mgr.glucose_user,
-                                _cont_glucose_pass=vault_cred_mgr.glucose_password)
+                                _cont_glucose_pass=vault_cred_mgr.glucose_password,
+                                _telegram_chat=vault_cred_mgr.telegram_chat,
+                                _telegram_token=vault_cred_mgr.telegram_token)
     freeStyleML.processLoop()
 
 
