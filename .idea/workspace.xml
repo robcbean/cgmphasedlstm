@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="first complete versión" />
+    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="first complete versión">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image.png" beforeDir="false" afterPath="$PROJECT_DIR$/image.png" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -112,6 +115,12 @@
       <workItem from="1645965069378" duration="11370000" />
       <workItem from="1646070901881" duration="22000" />
       <workItem from="1646070944457" duration="6633000" />
+      <workItem from="1646116331198" duration="606000" />
+      <workItem from="1647019227686" duration="100000" />
+      <workItem from="1647019460535" duration="18000" />
+      <workItem from="1647019520365" duration="136000" />
+      <workItem from="1647123490638" duration="1575000" />
+      <workItem from="1647413712376" duration="7000" />
     </task>
     <task id="LOCAL-00001" summary="Testing">
       <created>1645862300438</created>
@@ -225,7 +234,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646080334280</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="first complete versión">
+      <created>1646116337305</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1646116337305</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -261,6 +277,11 @@
           <line>133</line>
           <option name="timeStamp" value="55" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>152</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -273,6 +294,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/cgmphasedlstm$main.coverage" NAME="main Coverage Results" MODIFIED="1645883468572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/main_py$main.coverage" NAME="main Coverage Results" MODIFIED="1646080427324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/main_py$main.coverage" NAME="main Coverage Results" MODIFIED="1647019555492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
