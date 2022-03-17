@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="first complete versión">
+    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="Don't use numpy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image.png" beforeDir="false" afterPath="$PROJECT_DIR$/image.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phased_lstm/plstmglucosemodel.py" beforeDir="false" afterPath="$PROJECT_DIR$/phased_lstm/plstmglucosemodel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +122,7 @@
       <workItem from="1647123490638" duration="1575000" />
       <workItem from="1647413712376" duration="7000" />
       <workItem from="1647514453309" duration="623000" />
-      <workItem from="1647515130662" duration="1650000" />
+      <workItem from="1647515130662" duration="2151000" />
     </task>
     <task id="LOCAL-00001" summary="Testing">
       <created>1645862300438</created>
@@ -244,7 +243,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646116337305</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Don't use numpy">
+      <created>1647516819609</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1647516819609</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -270,14 +276,15 @@
     <MESSAGE value="dates issue" />
     <MESSAGE value="telegram" />
     <MESSAGE value="first complete versión" />
-    <option name="LAST_COMMIT_MESSAGE" value="first complete versión" />
+    <MESSAGE value="Don't use numpy" />
+    <option name="LAST_COMMIT_MESSAGE" value="Don't use numpy" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/phased_lstm/plstmglucosemodel.py</url>
-          <line>78</line>
+          <line>77</line>
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -297,6 +304,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/cgmphasedlstm$main.coverage" NAME="main Coverage Results" MODIFIED="1645883468572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/main_py$main.coverage" NAME="main Coverage Results" MODIFIED="1647516759099" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/main_py$main.coverage" NAME="main Coverage Results" MODIFIED="1647516788683" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
