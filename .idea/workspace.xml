@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="Don't use numpy">
+    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="Fix messages">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -122,7 +122,7 @@
       <workItem from="1647123490638" duration="1575000" />
       <workItem from="1647413712376" duration="7000" />
       <workItem from="1647514453309" duration="623000" />
-      <workItem from="1647515130662" duration="2151000" />
+      <workItem from="1647515130662" duration="2472000" />
     </task>
     <task id="LOCAL-00001" summary="Testing">
       <created>1645862300438</created>
@@ -250,7 +250,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647516819609</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Fix messages">
+      <created>1647517308368</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1647517308369</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,7 +284,8 @@
     <MESSAGE value="telegram" />
     <MESSAGE value="first complete versión" />
     <MESSAGE value="Don't use numpy" />
-    <option name="LAST_COMMIT_MESSAGE" value="Don't use numpy" />
+    <MESSAGE value="Fix messages" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix messages" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
