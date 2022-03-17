@@ -76,10 +76,12 @@ class PlstmGlucoseModel(nn.Module):
 
     def predict(self,_xs,_xt):
         xs = _xs.reshape(1,_xs.shape[0],_xs.shape[1])
-        xs = torch.from_numpy(xs).type(torch.float)
+        #xso = torch.from_numpy(xs).type(torch.float)
+        xs = torch.tensor(list(xs.astype(float)))
         xt = _xt.reshape(1,_xt.shape[0])
-        xt = torch.from_numpy(xt.astype(int)).type(torch.float)
-        output = self(xs,xt)
+        #xto = torch.from_numpy(xt.astype(int)).type(torch.float)
+        xt = torch.tensor(list(xt.astype(float)))
+        output = self(xs.to(torch.float),xt.to(torch.float))
         return output
 
 
