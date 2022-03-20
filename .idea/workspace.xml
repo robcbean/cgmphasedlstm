@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="Fix messages">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/freestyle/GetMessages.py" beforeDir="false" afterPath="$PROJECT_DIR$/freestyle/GetMessages.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +47,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -122,7 +123,8 @@
       <workItem from="1647123490638" duration="1575000" />
       <workItem from="1647413712376" duration="7000" />
       <workItem from="1647514453309" duration="623000" />
-      <workItem from="1647515130662" duration="2472000" />
+      <workItem from="1647515130662" duration="2725000" />
+      <workItem from="1647757187792" duration="930000" />
     </task>
     <task id="LOCAL-00001" summary="Testing">
       <created>1645862300438</created>
@@ -257,7 +259,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647517308369</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Fix messages">
+      <created>1647517616145</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1647517616145</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

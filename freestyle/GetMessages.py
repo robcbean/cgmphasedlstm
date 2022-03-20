@@ -157,7 +157,13 @@ class GetMessageFreeStle(GetMessages):
         return ret_c,ret_s
 
     def getLastResult(self):
-        token_login = self.__tokenLogin__()
+        token_login = ""
+        while token_login == "":
+            try:
+                token_login = self.__tokenLogin__()
+            except:
+                time.sleep(5*60)
+
         url_reports = self.__getUrlReports__(self.__reportURL(), self.__reportString__(),token_login)
         data_result = self.__getDataResult__(url_reports,token_login)
         ret_c,ret_s = self.__getDataResultsProcessed__(data_result)
