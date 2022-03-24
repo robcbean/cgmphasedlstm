@@ -146,6 +146,9 @@ class CgmPhasedLSTM:
 
 
 if __name__ == "__main__":
+
+    os.chdir(os.path.dirname(__file__))
+
     configFile = "config.json"
     if len(sys.argv) > 1:
         configFile = sys.argv[2]
