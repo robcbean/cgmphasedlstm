@@ -137,7 +137,7 @@ class CgmPhasedLSTM:
             if prev_last_time == None or last_time > prev_last_time:
                 pred_value = self.scaler.inverse_transform_value(output.item())[0]
                 sys.stderr.write(f'\nLast value: {last_value} prev_value: {pred_value}')
-                if not self.glucoseInRange(last_value, pred_value) or True:
+                if not self.glucoseInRange(last_value, pred_value):
                     self.sendMessageToTelegram(xt_t,xs,last_value,pred_value,last_time)
             time.sleep(self.config.wait_time)
             prev_last_time = last_time
