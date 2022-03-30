@@ -1,59 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="add json">
+    <list default="true" id="953a16be-acf8-4d53-bc1d-fc4e92789dea" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/cgmphasedlstm.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cgmphasedlstm.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/image.png" beforeDir="false" afterPath="$PROJECT_DIR$/image.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitSEFilterConfiguration">
-    <file-type-list>
-      <filtered-out-file-type name="LOCAL_BRANCH" />
-      <filtered-out-file-type name="REMOTE_BRANCH" />
-      <filtered-out-file-type name="TAG" />
-      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
-    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="25c5UdxnWarIFXH83LLqYj4E2aQ" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="277PdoqdAjJa9pzPa7LYycETy3m" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -63,9 +37,9 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="$USER_HOME$/miniforge3/envs/src_test/bin/python" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -87,276 +61,21 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="6b62267f-e963-4776-ab47-1d35d8537872" name="Changes" comment="" />
-      <created>1645813551939</created>
+      <changelist id="953a16be-acf8-4d53-bc1d-fc4e92789dea" name="Changes" comment="" />
+      <created>1648668240967</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1645813551939</updated>
-      <workItem from="1645813554404" duration="946000" />
-      <workItem from="1645823955310" duration="1121000" />
-      <workItem from="1645825092240" duration="2274000" />
-      <workItem from="1645858643320" duration="4169000" />
-      <workItem from="1645866876641" duration="3669000" />
-      <workItem from="1645875014768" duration="1034000" />
-      <workItem from="1645883029621" duration="1135000" />
-      <workItem from="1645889485171" duration="2017000" />
-      <workItem from="1645891535458" duration="1821000" />
-      <workItem from="1645914579630" duration="925000" />
-      <workItem from="1645915526275" duration="627000" />
-      <workItem from="1645916196244" duration="149000" />
-      <workItem from="1645916363099" duration="317000" />
-      <workItem from="1645945670066" duration="399000" />
-      <workItem from="1645946088520" duration="133000" />
-      <workItem from="1645946242692" duration="84000" />
-      <workItem from="1645946352431" duration="2683000" />
-      <workItem from="1645964740937" duration="25000" />
-      <workItem from="1645964827109" duration="39000" />
-      <workItem from="1645964883412" duration="24000" />
-      <workItem from="1645964946268" duration="54000" />
-      <workItem from="1645965012774" duration="41000" />
-      <workItem from="1645965069378" duration="11370000" />
-      <workItem from="1646070901881" duration="22000" />
-      <workItem from="1646070944457" duration="6633000" />
-      <workItem from="1646116331198" duration="606000" />
-      <workItem from="1647019227686" duration="100000" />
-      <workItem from="1647019460535" duration="18000" />
-      <workItem from="1647019520365" duration="136000" />
-      <workItem from="1647123490638" duration="1575000" />
-      <workItem from="1647413712376" duration="7000" />
-      <workItem from="1647514453309" duration="623000" />
-      <workItem from="1647515130662" duration="2725000" />
-      <workItem from="1647757187792" duration="1813000" />
-      <workItem from="1647781554356" duration="474000" />
-      <workItem from="1648107627743" duration="290000" />
-      <workItem from="1648108008854" duration="263000" />
-      <workItem from="1648108498670" duration="3159000" />
-      <workItem from="1648124275474" duration="13000" />
+      <updated>1648668240967</updated>
+      <workItem from="1648668242527" duration="43000" />
+      <workItem from="1648668339458" duration="462000" />
     </task>
-    <task id="LOCAL-00001" summary="Testing">
-      <created>1645862300438</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1645862300438</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Testing">
-      <created>1645872595113</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1645872595113</updated>
-    </task>
-    <task id="LOCAL-00003" summary="CG">
-      <created>1645875974327</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1645875974327</updated>
-    </task>
-    <task id="LOCAL-00004" summary="CG">
-      <created>1645883043278</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1645883043278</updated>
-    </task>
-    <task id="LOCAL-00005" summary="CG">
-      <created>1645883491568</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1645883491568</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Vault">
-      <created>1645892467565</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1645892467565</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Vault">
-      <created>1645892597290</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1645892597290</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Vault">
-      <created>1645893356624</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1645893356624</updated>
-    </task>
-    <task id="LOCAL-00009" summary="calculate">
-      <created>1645949028295</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1645949028295</updated>
-    </task>
-    <task id="LOCAL-00010" summary="calculate">
-      <created>1645974324685</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1645974324685</updated>
-    </task>
-    <task id="LOCAL-00011" summary="calculate">
-      <created>1645981631510</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1645981631510</updated>
-    </task>
-    <task id="LOCAL-00012" summary="dates issue">
-      <created>1645984353751</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1645984353751</updated>
-    </task>
-    <task id="LOCAL-00013" summary="telegram">
-      <created>1646074603867</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1646074603867</updated>
-    </task>
-    <task id="LOCAL-00014" summary="telegram">
-      <created>1646075815509</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1646075815509</updated>
-    </task>
-    <task id="LOCAL-00015" summary="telegram">
-      <created>1646079968911</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1646079968911</updated>
-    </task>
-    <task id="LOCAL-00016" summary="first complete versión">
-      <created>1646080334280</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1646080334280</updated>
-    </task>
-    <task id="LOCAL-00017" summary="first complete versión">
-      <created>1646116337305</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1646116337305</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Don't use numpy">
-      <created>1647516819609</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1647516819609</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Fix messages">
-      <created>1647517308368</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1647517308369</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Fix messages">
-      <created>1647517616145</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1647517616145</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Fix messages">
-      <created>1647758347082</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1647758347082</updated>
-    </task>
-    <task id="LOCAL-00022" summary="final version">
-      <created>1648108263863</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1648108263863</updated>
-    </task>
-    <task id="LOCAL-00023" summary="add json">
-      <created>1648112892658</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1648112892658</updated>
-    </task>
-    <task id="LOCAL-00024" summary="add json">
-      <created>1648113891218</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1648113891218</updated>
-    </task>
-    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Testing" />
-    <MESSAGE value="CG" />
-    <MESSAGE value="Vault" />
-    <MESSAGE value="calculate" />
-    <MESSAGE value="dates issue" />
-    <MESSAGE value="telegram" />
-    <MESSAGE value="first complete versión" />
-    <MESSAGE value="Don't use numpy" />
-    <MESSAGE value="Fix messages" />
-    <MESSAGE value="final version" />
-    <MESSAGE value="add json" />
-    <option name="LAST_COMMIT_MESSAGE" value="add json" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/phased_lstm/plstmglucosemodel.py</url>
-          <line>77</line>
-          <option name="timeStamp" value="58" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/phased_lstm/plstmcell.py</url>
-          <line>115</line>
-          <option name="timeStamp" value="59" />
-        </line-breakpoint>
-      </breakpoints>
-      <default-breakpoints>
-        <breakpoint type="python-exception">
-          <properties notifyOnTerminate="true" exception="BaseException">
-            <option name="notifyOnTerminate" value="true" />
-          </properties>
-        </breakpoint>
-      </default-breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/cgmphasedlstm$main.coverage" NAME="main Coverage Results" MODIFIED="1645883468572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/main_py$main.coverage" NAME="main Coverage Results" MODIFIED="1647758581502" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/cgmphasedlstm$main.coverage" NAME="main Coverage Results" MODIFIED="1648668277718" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/main_py$main.coverage" NAME="main Coverage Results" MODIFIED="1648668341200" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
