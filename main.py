@@ -128,17 +128,21 @@ class CgmPhasedLSTM:
         prev_last_time  = None
         while True:
 
-            data_c, data_s = self.cgs.getLastResult()
-            xs, xt, xt_t = self.prepareData(data_c,data_s)
-            output = self.model.predict(xs,xt)
-            last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
-            last_time = xt_t[xt_t.shape[0] - 1]
-            sys.stderr.write(f'\nPrev. last time:{prev_last_time}\tLast time: {last_time}')
-            if prev_last_time == None or last_time > prev_last_time:
-                pred_value = self.scaler.inverse_transform_value(output.item())[0]
-                sys.stderr.write(f'\nLast value: {last_value} prev_value: {pred_value}')
-                if not self.glucoseInRange(last_value, pred_value):
-                    self.sendMessageToTelegram(xt_t,xs,last_value,pred_value,last_time)
+            try:
+                data_c, data_s = self.cgs.getLastResult()
+                xs, xt, xt_t = self.prepareData(data_c,data_s)
+                output = self.model.predict(xs,xt)
+                last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
+                last_time = xt_t[xt_t.shape[0] - 1]
+                sys.stderr.write(f'\nPrev. last time:{prev_last_time}\tLast time: {last_time}')
+                if prev_last_time == None or last_time > prev_last_time:
+                    pred_value = self.scaler.inverse_transform_value(output.item())[0]
+                    sys.stderr.write(f'\nLast value: {last_value} prev_value: {pred_value}')
+                    if not self.glucoseInRange(last_value, pred_value):
+                        self.sendMessageToTelegram(xt_t,xs,last_value,pred_value,last_time)
+            except Exception as ex:
+                sys.stderr.write(str(ex))
+
             time.sleep(self.config.wait_time)
             prev_last_time = last_time
 
