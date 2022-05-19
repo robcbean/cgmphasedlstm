@@ -1,12 +1,14 @@
-import sys
-import os
-import pickle
-import pandas as pd
-import numpy as np
 import datetime
 import enum
-from process_data.extract_data import ExportFileFields, RecordTypeOutput
+import os
+import pickle
+import sys
+
+import numpy as np
+import pandas as pd
 from sklearn import preprocessing
+
+from process_data.extract_data import ExportFileFields, RecordTypeOutput
 
 
 class ScalerValues(enum.Enum):

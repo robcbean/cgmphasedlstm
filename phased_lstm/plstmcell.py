@@ -1,6 +1,7 @@
+import math
+
 import torch
 from torch import nn
-import math
 
 OFF_SLOPE = 1e-3
 

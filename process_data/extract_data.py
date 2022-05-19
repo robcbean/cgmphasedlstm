@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import sys
 import enum
+import sys
 
 
 class Fields(enum.Enum):

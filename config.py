@@ -1,6 +1,7 @@
 import json
 import os
 
+
 # https://stackoverflow.com/questions/38464302/wrapping-a-python-class-around-json-data-which-is-better 21/02/2022
 class Conifg:
     exp_props = {}

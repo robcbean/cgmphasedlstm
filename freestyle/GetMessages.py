@@ -1,14 +1,15 @@
-import sys
-from urllib.parse import urljoin
-import requests
 import datetime
-import os
-import time
 import json
-from mako.template import Template
-from lxml import html
+import os
 import platform
+import sys
+import time
+from urllib.parse import urljoin
+
 import pandas as pd
+import requests
+from lxml import html
+from mako.template import Template
 
 
 class GetMessages:

@@ -1,7 +1,8 @@
 import torch
-from torch import nn, optim
-from phased_lstm import plstmcell
 import torch.nn.functional as F
+from torch import nn, optim
+
+from phased_lstm import plstmcell
 
 
 class PlstmGlucoseModel(nn.Module):

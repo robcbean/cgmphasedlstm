@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 import datetime
-import time
-import numpy as np
-import config
-import sys
 import os
+import sys
+import time
+
+import matplotlib.pyplot as plt
+import numpy as np
 import torch
-from process_data.load_data import loadScaler
+
+import config
+from freestyle import GetMessages
 from phased_lstm import plstmglucosemodel
+from process_data.load_data import LoadData, loadScaler
 from telegram import sender
 from vault import credentials
-from freestyle import GetMessages
-from process_data.load_data import LoadData
-import matplotlib.pyplot as plt
 
 
 class CgmPhasedLSTM:

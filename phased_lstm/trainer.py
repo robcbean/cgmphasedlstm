@@ -1,10 +1,10 @@
-import sys
-
-import torch
-import torch.nn.functional as F
 import enum
 import math
+import sys
+
 import numpy as np
+import torch
+import torch.nn.functional as F
 
 
 class Events(enum.Enum):
