@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 import math
+
 OFF_SLOPE = 1e-3
 
 
@@ -39,7 +40,9 @@ class GradMod(torch.autograd.Function):
         """
         x, y = ctx.saved_variables
         # return grad_output * 1, grad_output * torch.neg(torch.floor_divide(x, y))
-        return grad_output * 1, grad_output * torch.neg(torch.div(x, y, rounding_mode='trunc'))
+        return grad_output * 1, grad_output * torch.neg(
+            torch.div(x, y, rounding_mode="trunc")
+        )
 
 
 class PLSTM(nn.Module):
@@ -64,18 +67,18 @@ class PLSTM(nn.Module):
         nn.init.constant_(self.On_End, 0.05)  # Set to be 5% "open"
         nn.init.uniform_(self.Shifts, 0, 100)  # Have a wide spread of shifts
         # Uniformly distribute periods in log space between exp(1, 3)
-        self.Periods.data.copy_(torch.exp((3 - 1) *
-                                          torch.rand(self.Periods.shape) + 1))
+        self.Periods.data.copy_(torch.exp((3 - 1) * torch.rand(self.Periods.shape) + 1))
         # -----------------------------------------------------
 
-    def forward(self, x, ts,
-                init_states=None):
+    def forward(self, x, ts, init_states=None):
         """Assumes x is of shape (batch, sequence, feature)"""
         bs, seq_sz, _ = x.size()
         hidden_seq = []
         if init_states is None:
-            h_t, c_t = (torch.zeros(bs, self.hidden_size).to(x.device),
-                        torch.zeros(bs, self.hidden_size).to(x.device))
+            h_t, c_t = (
+                torch.zeros(bs, self.hidden_size).to(x.device),
+                torch.zeros(bs, self.hidden_size).to(x.device),
+            )
         else:
             h_t, c_t = init_states
 
@@ -91,17 +94,26 @@ class PLSTM(nn.Module):
             # Broadcast the time across all units
             t_broadcast = time_input_n.unsqueeze(-1)
             # Get the time within the period
-            in_cycle_time = GradMod.apply(t_broadcast + shift_broadcast, period_broadcast)
+            in_cycle_time = GradMod.apply(
+                t_broadcast + shift_broadcast, period_broadcast
+            )
 
             # Find the phase
             is_up_phase = torch.le(in_cycle_time, on_mid_broadcast)
-            is_down_phase = torch.gt(in_cycle_time, on_mid_broadcast) * torch.le(in_cycle_time, on_end_broadcast)
+            is_down_phase = torch.gt(in_cycle_time, on_mid_broadcast) * torch.le(
+                in_cycle_time, on_end_broadcast
+            )
 
             # Set the mask
-            sleep_wake_mask = torch.where(is_up_phase, in_cycle_time / on_mid_broadcast,
-                                          torch.where(is_down_phase,
-                                                      (on_end_broadcast - in_cycle_time) / on_mid_broadcast,
-                                                      OFF_SLOPE * (in_cycle_time / period_broadcast)))
+            sleep_wake_mask = torch.where(
+                is_up_phase,
+                in_cycle_time / on_mid_broadcast,
+                torch.where(
+                    is_down_phase,
+                    (on_end_broadcast - in_cycle_time) / on_mid_broadcast,
+                    OFF_SLOPE * (in_cycle_time / period_broadcast),
+                ),
+            )
             return sleep_wake_mask
 
         # -----------------------------------------------------
@@ -116,9 +128,9 @@ class PLSTM(nn.Module):
             gates = x_t @ self.W + h_t @ self.U + self.bias
             i_t, f_t, g_t, o_t = (
                 torch.sigmoid(gates[:, :HS]),  # input
-                torch.sigmoid(gates[:, HS:HS * 2]),  # forget
-                torch.tanh(gates[:, HS * 2:HS * 3]),
-                torch.sigmoid(gates[:, HS * 3:]),  # output
+                torch.sigmoid(gates[:, HS : HS * 2]),  # forget
+                torch.tanh(gates[:, HS * 2 : HS * 3]),
+                torch.sigmoid(gates[:, HS * 3 :]),  # output
             )
             c_t = f_t * c_t + i_t * g_t
             h_t = o_t * torch.tanh(c_t)
@@ -128,8 +140,8 @@ class PLSTM(nn.Module):
             # Get time gate openness
             sleep_wake_mask = calc_time_gate(t_t)
             # Sleep if off, otherwise stay a bit on
-            c_t = sleep_wake_mask * c_t + (1. - sleep_wake_mask) * old_c_t
-            h_t = sleep_wake_mask * h_t + (1. - sleep_wake_mask) * old_h_t
+            c_t = sleep_wake_mask * c_t + (1.0 - sleep_wake_mask) * old_c_t
+            h_t = sleep_wake_mask * h_t + (1.0 - sleep_wake_mask) * old_h_t
             # -----------------------------------------------------
             hidden_seq.append(h_t.unsqueeze(0))
         hidden_seq = torch.cat(hidden_seq, dim=0)

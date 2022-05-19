@@ -2,19 +2,23 @@
 import sys
 import enum
 
+
 class Fields(enum.Enum):
     RecordType = 3
     TimeStamp = 2
     GlucosePuntual = 5
     GlucosePeriodic = 4
 
+
 class RecordTypeOutput(enum.Enum):
     Puntual = "puntual"
     Periodic = "periodic"
 
+
 class RecordType(enum.Enum):
     Puntual = "1"
     Periodic = "0"
+
 
 class ExportFileFields(enum.Enum):
     Type = "type"
@@ -23,11 +27,11 @@ class ExportFileFields(enum.Enum):
 
 
 def get_header():
-    ret = f'{ExportFileFields.Type.value}\t{ExportFileFields.Timestamp.value}\t{ExportFileFields.GlucoseValue.value}'
+    ret = f"{ExportFileFields.Type.value}\t{ExportFileFields.Timestamp.value}\t{ExportFileFields.GlucoseValue.value}"
     return ret
 
 
-def process_file(_filename,_outfile=""):
+def process_file(_filename, _outfile=""):
 
     fs = open(_filename)
     if _outfile == "":
@@ -35,7 +39,7 @@ def process_file(_filename,_outfile=""):
     else:
         fd = open(_outfile)
 
-    fd.write(f'{get_header()}\n')
+    fd.write(f"{get_header()}\n")
 
     for line in fs.readlines():
         type = ""
@@ -50,15 +54,16 @@ def process_file(_filename,_outfile=""):
 
         if type != "":
             timestamp = fields[Fields.TimeStamp.value]
-            fd.write(f'{type}\t{timestamp}\t{glucose_value}\n')
+            fd.write(f"{type}\t{timestamp}\t{glucose_value}\n")
 
     if _outfile != "":
         fd.close()
     fs.close()
 
 
-def main(_filename,_outfile):
-    process_file(_filename,_outfile)
+def main(_filename, _outfile):
+    process_file(_filename, _outfile)
+
 
 if __name__ == "__main__":
     filename = "datos.csv"
@@ -67,6 +72,4 @@ if __name__ == "__main__":
         filename = sys.argv[1]
     if len(sys.argv) > 2:
         outfile = sys.argv[2]
-    main(filename,outfile)
-
-
+    main(filename, outfile)
