@@ -130,14 +130,9 @@ class GetMessageFreeStle(GetMessages):
             return self.getLastResult()
 
         tree = html.fromstring(resport_result.content)
-        json_string_data = (
-            tree.xpath(
-                "/html/head/script[contains(text(),'DataForLibreWeeklySummary')]"
-            )[0]
-            .text.split(";")[1]
-            .split("=")[1]
-        )
-        ret = json.loads(json_string_data)["Data"]["Days"]
+        json_string_data = \
+            tree.xpath("/html/head/script[contains(text(),'window.Report')]")[0].text.split(';')[1].split('=')[1]
+        ret = json.loads(json_string_data)['Data']['Days']
 
         return ret
 
