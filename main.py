@@ -180,7 +180,8 @@ class CgmPhasedLSTM:
                 sys.stderr.write(str(ex))
 
             time.sleep(self.config.wait_time)
-            prev_last_time = last_time
+            if last_time != None:
+                prev_last_time = last_time
 
 
 if __name__ == "__main__":
