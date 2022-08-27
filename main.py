@@ -18,12 +18,12 @@ from vault import credentials
 
 class CgmPhasedLSTM:
     def __init__(
-        self,
-        _config_file,
-        _cont_glucose_user,
-        _cont_glucose_pass,
-        _telegram_chat,
-        _telegram_token,
+            self,
+            _config_file,
+            _cont_glucose_user,
+            _cont_glucose_pass,
+            _telegram_chat,
+            _telegram_token,
     ):
         self.config = config.loadFromFile(_config_file)
         self.model = self.loadModel()
@@ -77,7 +77,7 @@ class CgmPhasedLSTM:
 
     def prepareData(self, _data_c, _data_s):
         n_records = _data_c.shape[0]
-        values_to_pred = _data_c[(n_records - self.model.past_values) : (n_records)]
+        values_to_pred = _data_c[(n_records - self.model.past_values): (n_records)]
         cgm_values = values_to_pred.values
         cgm_values_scaled = self.scaler.transform_values(cgm_values)
         cgm_time = values_to_pred.index
@@ -156,6 +156,7 @@ class CgmPhasedLSTM:
 
     def processLoop(self):
         prev_last_time = None
+        last_time = None
         while True:
 
             try:
@@ -180,8 +181,8 @@ class CgmPhasedLSTM:
                 sys.stderr.write(str(ex))
 
             time.sleep(self.config.wait_time)
-            if last_time != None:
-                prev_last_time = last_time
+        
+            prev_last_time = last_time
 
 
 if __name__ == "__main__":

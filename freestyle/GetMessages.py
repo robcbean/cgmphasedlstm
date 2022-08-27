@@ -131,7 +131,7 @@ class GetMessageFreeStle(GetMessages):
 
         tree = html.fromstring(resport_result.content)
         json_string_data = \
-            tree.xpath("/html/head/script[contains(text(),'window.Report')]")[0].text.split(';')[1].split('=')[1]
+            tree.xpath("/html/head/script[contains(text(),'window.report')]")[0].text.split(';')[1].split('=')[1]
         ret = json.loads(json_string_data)['Data']['Days']
 
         return ret
