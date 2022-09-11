@@ -7,11 +7,11 @@
                         ,"GlucoseUnits":1
                         ,"HighGlucoseThreshold":250
                         ,"LowGlucoseThreshold":70
-                        ,"PrimaryDeviceId":"4526af16-3f3b-11ec-8229-0242ac110002"
+                        ,"PrimaryDeviceId":"ccb536e6-2f37-11ed-9e72-0242ac110006"
                         ,"PrimaryDeviceTypeId":40066
                         ,"PrintReportsWithPatientInformation": true
                         ,"ReportIds":[2640066,140066,1640066,2040066,540066,840066,1040066,1440066]
-                        ,"SecondaryDeviceIds":["4a8b0cb8-9850-11e9-851e-0242ac110003"]
+                        ,"SecondaryDeviceIds":["4526af16-3f3b-11ec-8229-0242ac110002","4a8b0cb8-9850-11e9-851e-0242ac110003"]
                         ,"TertiaryDeviceIds":[]
                         ,"StartDates":[${start_date},${start_date},${start_date},${start_date},${start_date},${start_date},${start_date},${start_date}]
                         ,"TargetRangeHigh":180
