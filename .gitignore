@@ -130,3 +130,5 @@ dmypy.json
 
 #No guardmos en Git los parámetros de configuración ni las variables
 config.json
+report_string.json
+report_string.old.json
