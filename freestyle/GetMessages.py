@@ -33,7 +33,7 @@ class GetMessages:
         self.cg_interval_min_p = _cg_interval_min
 
 
-class GetMessageFreeStle(GetMessages):
+class GetMessageFreeStytle(GetMessages):
     def __init__(
         self,
         _user,
@@ -43,7 +43,7 @@ class GetMessageFreeStle(GetMessages):
         _report_string_template,
         _past_values,
     ):
-        super(GetMessageFreeStle, self).__init__(_user, _password, _past_values)
+        super(GetMessageFreeStytle, self).__init__(_user, _password, _past_values)
         self.cg_interval_min = 15
         self.finger_print = _finger_print
         self.base_url = _base_url

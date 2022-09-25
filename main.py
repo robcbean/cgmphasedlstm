@@ -30,7 +30,7 @@ class CgmPhasedLSTM:
         self.scaler = loadScaler(
             self.model.getModelName(), self.config.model.model_folder
         )
-        self.cgs = GetMessages.GetMessageFreeStle(
+        self.cgs = GetMessages.GetMessageFreeStytle(
             _past_values=self.config.model.past_values,
             _password=_cont_glucose_pass,
             _user=_cont_glucose_user,
