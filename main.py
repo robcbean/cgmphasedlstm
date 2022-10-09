@@ -9,7 +9,7 @@ import numpy as np
 import torch
 
 import config
-from freestyle import GetMessages
+from freestyle import getmessages
 from phased_lstm import plstmglucosemodel
 from process_data.load_data import LoadData, loadScaler
 from telegram import sender
@@ -160,7 +160,7 @@ class CgmPhasedLSTM:
         while True:
 
             try:
-                data_c, data_s = self.cgs.getLastResult()
+                data_c, data_s = self.cgs.get_last_result()
                 xs, xt, xt_t = self.prepareData(data_c, data_s)
                 output = self.model.predict(xs, xt)
                 last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
@@ -181,9 +181,8 @@ class CgmPhasedLSTM:
                 sys.stderr.write(str(ex))
 
             time.sleep(self.config.wait_time)
-        
-            prev_last_time = last_time
 
+            prev_last_time = last_time
 
 if __name__ == "__main__":
 

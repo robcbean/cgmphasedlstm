@@ -8,7 +8,8 @@
             "freetyle_baseurl": "https://api-eu.libreview.io/",
             "variation_percent" : 5,
             "threshold_low" : 70,
-            "threshold_high" : 180
+            "threshold_high" : 180,
+            "double_factor": true
     },
     "model":
     {
