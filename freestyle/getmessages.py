@@ -201,12 +201,14 @@ class GetMessageFreeStytle(GetMessages):
 
 
 
-    def __request_send_code_to_mobile__(self, _token: str) -> None:
+    def __request_send_code_to_mobile__(self, _token: str) -> str:
         message: dict = {
             "isPrimaryMethod": True
         }
-        request_code = requests.post(self.__send_code_url__, json=message, headers=self.get_token_header(_token))
-        i: int = 0
+        request_code = requests.post(self.__send_code_url__, json=message, headers=self.get_token_header(_token)).json()
+        ret: str = request_code["ticket"]["token"]
+
+        return ret
 
 
     def __token_login_double_factor__(self, _token_login: str):
