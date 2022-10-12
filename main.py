@@ -24,19 +24,25 @@ class CgmPhasedLSTM:
             _cont_glucose_pass,
             _telegram_chat,
             _telegram_token,
+            _icloud_user,
+            _icloud_password
     ):
         self.config = config.loadFromFile(_config_file)
         self.model = self.loadModel()
         self.scaler = loadScaler(
             self.model.getModelName(), self.config.model.model_folder
         )
-        self.cgs = GetMessages.GetMessageFreeStytle(
+        self.cgs = getmessages.GetMessageFreeStytle(
             _past_values=self.config.model.past_values,
             _password=_cont_glucose_pass,
             _user=_cont_glucose_user,
             _finger_print=self.config.glucose.freetyle_fingerprint,
             _base_url=self.config.glucose.freetyle_baseurl,
             _report_string_template="report_string.json",
+            _icloud_user=_icloud_user,
+            _icloud_password=_icloud_password,
+            _filename_token_double_factor="double_factor.txt",
+            _double_factor=True
         )
         self.telegram_send = sender.TelegramSender(_telegram_chat, _telegram_token)
         self.loader = LoadData()
@@ -200,5 +206,7 @@ if __name__ == "__main__":
         _cont_glucose_pass=vault_cred_mgr.glucose_password,
         _telegram_chat=vault_cred_mgr.telegram_chat,
         _telegram_token=vault_cred_mgr.telegram_token,
+        _icloud_user=vault_cred_mgr.icloud_user,
+        _icloud_password=vault_cred_mgr.icloud_password
     )
     freeStyleML.processLoop()

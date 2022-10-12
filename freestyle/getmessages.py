@@ -262,12 +262,12 @@ class GetMessageFreeStytle(GetMessages):
 
         return ret
     def __get_token_double_factor__(self, _token: str, _code: int) -> dict:
-        message: dict =  {
-            "code" : str(_code),
+        message: dict = {
+            "code": str(_code),
             "isPrimaryMethod" : True
         }
         request_response =\
-            requests.post(self.__result_code_url__, json=message, headers=self.get_token_header()).json()
+            requests.post(self.__result_code_url__, json=message, headers=self.get_token_header(_token)).json()
 
         token: str = request_response["data"]["authTicket"]["token"]
         expire_data_timestampt: int = request_response["data"]["authTicket"]["expires"]
@@ -297,6 +297,7 @@ class GetMessageFreeStytle(GetMessages):
 
     def __get_token_login__(self) -> str:
         ret: str = ""
+        generate_new_token: bool = False
         if not self.double_factor:
             ret = self.__token_login_single_factor__()
         else:
@@ -309,11 +310,13 @@ class GetMessageFreeStytle(GetMessages):
                 else:
                     generate_new_token = True
             if generate_new_token:
-                ret = self.__token_login_single_factor__()
+                token_single_factor: str = self.__token_login_single_factor__()
+                token_send_mobile: str = self.__request_send_code_to_mobile__(token_single_factor)
+                time.sleep(60)
                 mobile_code: int = self.__get_mobile_code__()
-                token_double_factor: dict = self.__get_token_double_factor__(ret, mobile_code)
+                token_double_factor: dict = self.__get_token_double_factor__(token_send_mobile, mobile_code)
                 self.__store__token_double__factor__(token_double_factor)
-                ret = ret['token']
+                ret = token_double_factor['token']
         return ret
 
     def get_last_result(self):

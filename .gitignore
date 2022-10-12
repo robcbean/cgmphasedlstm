@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 libreview.txt
+double_factor.txt
 
 # C extensions
 *.so
