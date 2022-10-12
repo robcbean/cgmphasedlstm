@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+libreview.txt
+double_factor.txt
+*.png
 
 # C extensions
 *.so
@@ -134,3 +137,4 @@ report_string.json
 report_string.old.json
 
 .idea/
+doc/

@@ -9,7 +9,7 @@ import numpy as np
 import torch
 
 import config
-from freestyle import GetMessages
+from freestyle import getmessages
 from phased_lstm import plstmglucosemodel
 from process_data.load_data import LoadData, loadScaler
 from telegram import sender
@@ -24,19 +24,25 @@ class CgmPhasedLSTM:
             _cont_glucose_pass,
             _telegram_chat,
             _telegram_token,
+            _icloud_user,
+            _icloud_password
     ):
         self.config = config.loadFromFile(_config_file)
         self.model = self.loadModel()
         self.scaler = loadScaler(
             self.model.getModelName(), self.config.model.model_folder
         )
-        self.cgs = GetMessages.GetMessageFreeStle(
+        self.cgs = getmessages.GetMessageFreeStytle(
             _past_values=self.config.model.past_values,
             _password=_cont_glucose_pass,
             _user=_cont_glucose_user,
             _finger_print=self.config.glucose.freetyle_fingerprint,
             _base_url=self.config.glucose.freetyle_baseurl,
             _report_string_template="report_string.json",
+            _icloud_user=_icloud_user,
+            _icloud_password=_icloud_password,
+            _filename_token_double_factor="double_factor.txt",
+            _double_factor=True
         )
         self.telegram_send = sender.TelegramSender(_telegram_chat, _telegram_token)
         self.loader = LoadData()
@@ -160,7 +166,7 @@ class CgmPhasedLSTM:
         while True:
 
             try:
-                data_c, data_s = self.cgs.getLastResult()
+                data_c, data_s = self.cgs.get_last_result()
                 xs, xt, xt_t = self.prepareData(data_c, data_s)
                 output = self.model.predict(xs, xt)
                 last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
@@ -181,9 +187,8 @@ class CgmPhasedLSTM:
                 sys.stderr.write(str(ex))
 
             time.sleep(self.config.wait_time)
-        
-            prev_last_time = last_time
 
+            prev_last_time = last_time
 
 if __name__ == "__main__":
 
@@ -201,5 +206,7 @@ if __name__ == "__main__":
         _cont_glucose_pass=vault_cred_mgr.glucose_password,
         _telegram_chat=vault_cred_mgr.telegram_chat,
         _telegram_token=vault_cred_mgr.telegram_token,
+        _icloud_user=vault_cred_mgr.icloud_user,
+        _icloud_password=vault_cred_mgr.icloud_password
     )
     freeStyleML.processLoop()
