@@ -55,6 +55,11 @@ class DoubleFactorManager:
                 ret = open(local_file).readlines()
 
         return ret
+    def get_code(self) -> int:
+        file_content: str = self.get_file_content()
+        ret: int = self.get_code_from_file_content(file_content=file_content)
+        return ret
+
 
 
 

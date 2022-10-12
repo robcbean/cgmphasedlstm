@@ -7,9 +7,12 @@ import time
 from urllib.parse import urljoin
 
 import pandas as pd
+import pickle
 import requests
 from lxml import html
 from mako.template import Template
+from icloudfile import DoubleFactorManager
+
 
 
 class GetMessages:
@@ -34,15 +37,27 @@ class GetMessages:
 
 
 class GetMessageFreeStytle(GetMessages):
+
+    double_factor_manager: DoubleFactorManager
+    double_factor: bool
+    cg_interval_min: int
+    finger_print: str
+    base_url: str
+    icloud_user: str
+    icloud_password: str
+    filename_token_double_factor: str
     def __init__(
             self,
-            _user,
-            _password,
-            _finger_print,
-            _base_url,
-            _report_string_template,
-            _past_values,
-            _double_factor,
+            _user: str,
+            _password: str,
+            _finger_print: str,
+            _base_url: str,
+            _report_string_template: str,
+            _past_values: int,
+            _double_factor: bool = False,
+            _icloud_user: str = "",
+            _icloud_password: str = "",
+            _filename_token_double_factor: str = ""
     ):
         super(GetMessageFreeStytle, self).__init__(_user, _password, _past_values)
         self.cg_interval_min = 15
@@ -50,6 +65,34 @@ class GetMessageFreeStytle(GetMessages):
         self.base_url = _base_url
         self.report_string_template = _report_string_template
         self.double_factor = _double_factor
+        if self.double_factor:
+            self.icloud_user = _icloud_user
+            self.icloud_password = _icloud_password
+            self.filename_token_double_factor = _filename_token_double_factor
+            self.double_factor_manager \
+                = DoubleFactorManager(icloud_user=self.icloud_user, icloud_password=self.icloud_password)
+        self.__check_parameters()
+
+    def __check_parameters(self):
+        error_msg: str = ""
+
+        if self.finger_print == "":
+            error_msg = error_msg + f"finger_print parameter it's empty\n"
+        if self.base_url == "":
+            error_msg = error_msg + f"base_url parameter it's empty\n"
+        if self.report_string_template == "":
+            error_msg = error_msg + f"report_string_template parameter it's empty\n"
+        if self.double_factor:
+            if self.icloud_user == "":
+                error_msg = error_msg + f"icloud_user parameter it's empty\n"
+            if self.icloud_password == "":
+                error_msg = error_msg + f"icloud_password parameter it's empty\n"
+            if self.filename_token_double_factor == "":
+                error_msg = error_msg + f"filename_token_double_factor parameter it's empty\n"
+
+        if error_msg != "":
+            raise Exception(error_msg)
+
 
     def __login_url__(self):
         ret = f'{urljoin(self.base_url, "auth/login")}'
@@ -210,21 +253,67 @@ class GetMessageFreeStytle(GetMessages):
 
         return ret
 
+    def __get_mobile_code__(self) -> int:
+        ret: int = self.double_factor_manager.get_code()
 
-    def __token_login_double_factor__(self, _token_login: str):
-        ret: str = _token_login
+        return ret
+    def __get_token_double_factor__(self, _token: str, _code: int) -> dict:
+        message: dict =  {
+            "code" : str(_code),
+            "isPrimaryMethod" : True
+        }
+        request_response =\
+            requests.post(self.__result_code_url__, json=message, headers=self.get_token_header()).json()
 
+        token: str = request_response["data"]["authTicket"]["token"]
+        expire_data_timestampt: int = request_response["data"]["authTicket"]["expires"]
+
+        ret: dict = {
+            "token":  token,
+            "expire_data_timestamp": expire_data_timestampt
+        }
+
+        return ret
+
+    def __token_login_double_factor__(self, _token_login: str) -> str:
+        ret: str = self.__request_send_code_to_mobile__(_token_login)
+        return ret
+
+    def __store__token_double__factor__(self, token_double_factor: dict) -> None:
+        fd = open(self.filename_token_double_factor, 'wb')
+        pickle.dump(token_double_factor, fd)
+        fd.close()
+
+    def __load_token_double_factor__(self) -> dict:
+        ret: dict = {}
+        if os.path.exists(self.filename_token_double_factor):
+            fd = open(self.filename_token_double_factor, "rb")
+            ret = pickle.load(fd)
         return ret
 
     def get_last_result(self):
         token_login: str = ""
+        expire_date_utc: int
+
         while token_login == "":
             try:
-                token_login_single_factor: str = self.__token_login_single_factor__()
                 if not self.double_factor:
-                    token_login = self.__token_login_double_factor__(token_login_single_factor)
+                    token_login = self.__token_login_single_factor__()
                 else:
-                    token_login = __
+                    token_double_factor: dict = self.__load_token_double_factor__()
+                    if "expire_data_timestamp" not in token_double_factor.keys():
+                        generate_new_token = True
+                    else:
+                        if token_double_factor['expire_data_timestamp'] > datetime.datetime.now().timestamp():
+                            token_login = token_double_factor['token']
+                        else:
+                            generate_new_token = True
+                    if generate_new_token:
+                        token_login = self.__token_login_single_factor__()
+                        mobile_code: int = self.__get_mobile_code__()
+                        token_double_factor: dict = self.__get_token_double_factor__(token_login, mobile_code)
+                        self.__store__token_double__factor__(token_double_factor)
+                        token_login = token_login['token']
             except:
                 time.sleep(5 * 60)
 
