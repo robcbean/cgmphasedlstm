@@ -11,7 +11,7 @@ import pickle
 import requests
 from lxml import html
 from mako.template import Template
-from icloudfile import DoubleFactorManager
+from freestyle.icloudfile import DoubleFactorManager
 
 
 
@@ -38,6 +38,8 @@ class GetMessages:
 
 class GetMessageFreeStytle(GetMessages):
 
+    ICLOUD_FILE:str = "Shortcuts/libreview.txt"
+
     double_factor_manager: DoubleFactorManager
     double_factor: bool
     cg_interval_min: int
@@ -46,6 +48,7 @@ class GetMessageFreeStytle(GetMessages):
     icloud_user: str
     icloud_password: str
     filename_token_double_factor: str
+
     def __init__(
             self,
             _user: str,
@@ -70,7 +73,8 @@ class GetMessageFreeStytle(GetMessages):
             self.icloud_password = _icloud_password
             self.filename_token_double_factor = _filename_token_double_factor
             self.double_factor_manager \
-                = DoubleFactorManager(icloud_user=self.icloud_user, icloud_password=self.icloud_password)
+                = DoubleFactorManager(icloud_user=self.icloud_user, icloud_password=self.icloud_password,
+                                      icloud_file=GetMessageFreeStytle.ICLOUD_FILE)
         self.__check_parameters()
 
     def __check_parameters(self):
@@ -291,29 +295,34 @@ class GetMessageFreeStytle(GetMessages):
             ret = pickle.load(fd)
         return ret
 
+    def __get_token_login__(self) -> str:
+        ret: str = ""
+        if not self.double_factor:
+            ret = self.__token_login_single_factor__()
+        else:
+            token_double_factor: dict = self.__load_token_double_factor__()
+            if "expire_data_timestamp" not in token_double_factor.keys():
+                generate_new_token = True
+            else:
+                if token_double_factor['expire_data_timestamp'] > datetime.datetime.now().timestamp():
+                    ret = token_double_factor['token']
+                else:
+                    generate_new_token = True
+            if generate_new_token:
+                ret = self.__token_login_single_factor__()
+                mobile_code: int = self.__get_mobile_code__()
+                token_double_factor: dict = self.__get_token_double_factor__(ret, mobile_code)
+                self.__store__token_double__factor__(token_double_factor)
+                ret = ret['token']
+        return ret
+
     def get_last_result(self):
         token_login: str = ""
         expire_date_utc: int
 
         while token_login == "":
             try:
-                if not self.double_factor:
-                    token_login = self.__token_login_single_factor__()
-                else:
-                    token_double_factor: dict = self.__load_token_double_factor__()
-                    if "expire_data_timestamp" not in token_double_factor.keys():
-                        generate_new_token = True
-                    else:
-                        if token_double_factor['expire_data_timestamp'] > datetime.datetime.now().timestamp():
-                            token_login = token_double_factor['token']
-                        else:
-                            generate_new_token = True
-                    if generate_new_token:
-                        token_login = self.__token_login_single_factor__()
-                        mobile_code: int = self.__get_mobile_code__()
-                        token_double_factor: dict = self.__get_token_double_factor__(token_login, mobile_code)
-                        self.__store__token_double__factor__(token_double_factor)
-                        token_login = token_login['token']
+                token_login = self.__get_token_login__()
             except:
                 time.sleep(5 * 60)
 
