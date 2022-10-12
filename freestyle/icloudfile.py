@@ -24,7 +24,7 @@ class DoubleFactorManager:
             ret = PyiCloudService(apple_id=self.icloud_user, password=self.icloud_password)
         return ret
 
-    def get_code_from_file_content(self, file_content: list[str]) -> int:
+    def get_code_from_file_content(self, file_content: list) -> int:
         ret: int = -1
         file_len: int = len(file_content)
         if file_len > 1:
