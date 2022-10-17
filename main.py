@@ -14,7 +14,7 @@ from phased_lstm import plstmglucosemodel
 from process_data.load_data import LoadData, loadScaler
 from telegram import sender
 from vault import credentials
-
+import schedule
 
 class CgmPhasedLSTM:
     def __init__(
@@ -164,8 +164,11 @@ class CgmPhasedLSTM:
         prev_last_time = None
         last_time = None
         while True:
-            self.get_gluclose_values(last_time, prev_last_time)
-            time.sleep(self.config.wait_time)
+            schedule.every(self.config.wait_time).seconds.until("19:30").do(self.get_gluclose_values, last_time, prev_last_time)
+
+        #while True:
+        #    self.get_gluclose_values(last_time, prev_last_time)
+        #    time.sleep(self.config.wait_time)
 
     def get_gluclose_values(self, last_time, prev_last_time):
         try:
