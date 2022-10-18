@@ -174,7 +174,7 @@ class CgmPhasedLSTM:
 
     def get_gluclose_values(self):
         try:
-            sys.stderr("\nProcesing get_glucse_values\n")
+            sys.stderr.write("\nProcesing get_glucse_values\n")
             data_c, data_s = self.cgs.get_last_result()
             xs, xt, xt_t = self.prepareData(data_c, data_s)
             output = self.model.predict(xs, xt)
