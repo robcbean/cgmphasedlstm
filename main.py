@@ -14,9 +14,11 @@ from phased_lstm import plstmglucosemodel
 from process_data.load_data import LoadData, loadScaler
 from telegram import sender
 from vault import credentials
-
+import schedule
 
 class CgmPhasedLSTM:
+    last_time: datetime.time
+    prev_last_time: datetime.time
     def __init__(
             self,
             _config_file,
@@ -159,36 +161,41 @@ class CgmPhasedLSTM:
             )
         )
         # (_x_values_time, _y_values, _x_next_value, _y_next_value
-
+    def start_proces(self):
+        schedule.every(self.config.wait_time).seconds.until("23:59").do(self.get_gluclose_values)
     def processLoop(self):
-        prev_last_time = None
-        last_time = None
+        self.prev_last_time = None
+        self.last_time = None
+        self.start_proces()
+        schedule.every(1).day.at("07:00").do(self.start_proces)
         while True:
+            schedule.run_pending()
+            time.sleep(1)
 
-            try:
-                data_c, data_s = self.cgs.get_last_result()
-                xs, xt, xt_t = self.prepareData(data_c, data_s)
-                output = self.model.predict(xs, xt)
-                last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
-                last_time = xt_t[xt_t.shape[0] - 1]
+    def get_gluclose_values(self):
+        try:
+            sys.stderr.write("\nProcesing get_glucse_values\n")
+            data_c, data_s = self.cgs.get_last_result()
+            xs, xt, xt_t = self.prepareData(data_c, data_s)
+            output = self.model.predict(xs, xt)
+            last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
+            self.last_time = xt_t[xt_t.shape[0] - 1]
+            sys.stderr.write(
+                f"\nPrev. last time:{self.prev_last_time}\tLast time: {self.last_time}"
+            )
+            if self.prev_last_time == None or self.last_time > self.prev_last_time:
+                pred_value = self.scaler.inverse_transform_value(output.item())[0]
                 sys.stderr.write(
-                    f"\nPrev. last time:{prev_last_time}\tLast time: {last_time}"
+                    f"\nLast value: {last_value} prev_value: {pred_value}"
                 )
-                if prev_last_time == None or last_time > prev_last_time:
-                    pred_value = self.scaler.inverse_transform_value(output.item())[0]
-                    sys.stderr.write(
-                        f"\nLast value: {last_value} prev_value: {pred_value}"
+                if not self.glucoseInRange(last_value, pred_value):
+                    self.sendMessageToTelegram(
+                        xt_t, xs, last_value, pred_value, last_time
                     )
-                    if not self.glucoseInRange(last_value, pred_value):
-                        self.sendMessageToTelegram(
-                            xt_t, xs, last_value, pred_value, last_time
-                        )
-            except Exception as ex:
-                sys.stderr.write(str(ex))
+        except Exception as ex:
+            sys.stderr.write(str(ex))
+        self.prev_last_time = self.last_time
 
-            time.sleep(self.config.wait_time)
-
-            prev_last_time = last_time
 
 if __name__ == "__main__":
 
