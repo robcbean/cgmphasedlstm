@@ -20,7 +20,7 @@ class LogMessages:
     def __init__(self, stdout=sys.stdout, stderr=sys.stderr) -> None:
         self.stdout = stdout
         self.stderr = stderr
-        self.log_date = datetime.datetime.now()
+        self.log_date = datetime.datetime.today()
         logging.basicConfig()
 
     def get_file_name(self):
@@ -28,7 +28,14 @@ class LogMessages:
         return ret
 
     def write_to_log(self, message: str, message_type: MessageType) -> None:
-        pass
+        if datetime.datetime.today() != self.log_date:
+            setup_date
+        if message_type == MessageType.MESSAGE:
+            self.send_output_message(message)
+        elif message_type == MessageType.ERROR:
+            self.send_error_message(message)
+        else:
+            raise Exception(f"Message type not defined")
 
     def send_output_message(self, message: str) -> None:
         self.stdout.write(message + "\n")
