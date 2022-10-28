@@ -21,15 +21,18 @@ class LogMessages:
         self.stdout = stdout
         self.stderr = stderr
         self.log_date = datetime.datetime.today()
-        logging.basicConfig()
+        self.setup_login()
 
+    def setup_login(self):
+        logging.basicConfig(filename=self.get_file_name())
     def get_file_name(self):
         ret: str = SUFFIX_LOG__NAME.replace(SUFFIX_LOG__NAME, DATE_SUFFIX, self.log_date.strftime("%Y%m%d"))
         return ret
 
     def write_to_log(self, message: str, message_type: MessageType) -> None:
         if datetime.datetime.today() != self.log_date:
-            setup_date
+            self.log_date = datetime.datetime.today()
+            self.setup_login()
         if message_type == MessageType.MESSAGE:
             self.send_output_message(message)
         elif message_type == MessageType.ERROR:
