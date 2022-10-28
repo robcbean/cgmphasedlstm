@@ -162,12 +162,12 @@ class CgmPhasedLSTM:
         )
         # (_x_values_time, _y_values, _x_next_value, _y_next_value
     def start_proces(self):
-        schedule.every(self.config.wait_time).seconds.until("23:59").do(self.get_gluclose_values)
+        schedule.every(self.config.wait_time).seconds.until(self.config.end_notification_time).do(self.get_gluclose_values)
     def processLoop(self):
         self.prev_last_time = None
         self.last_time = None
         self.start_proces()
-        schedule.every(1).day.at("07:00").do(self.start_proces)
+        schedule.every(1).day.at(self.config.start_notification_time).do(self.start_proces)
         while True:
             schedule.run_pending()
             time.sleep(1)
