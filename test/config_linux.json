@@ -1,0 +1,41 @@
+{
+    "send_message" : true,
+    "wait_time" : 120,
+    "last_time_file" : "last_time.txt",
+    "start_notification_time": "07:00",
+    "end_notification_time": "01:59",
+    "glucose" :
+    {
+            "freetyle_fingerprint" : "3,(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/Safari/,Mozilla/(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/15.6.1 Safari/605.1.15,AppleGPU,Europe/Madrid,1,MacIntel,es-ES,es-ES,AppleComputer,Inc.,safari",
+            "freetyle_baseurl": "https://api-eu.libreview.io/",
+            "variation_percent" : 5,
+            "threshold_low" : 70,
+            "threshold_high" : 180,
+            "double_factor": true
+    },
+    "model":
+    {
+            "model_folder" : "../models/",
+            "past_values" : 12,
+            "input_dim" : 2,
+            "hidden_dim" : 64,
+            "batch_size" : 1,
+            "use_lstm" : true,
+            "outputl1" : 512,
+            "dropout1" : 0.3,
+            "outputl2": 256,
+            "dropout2": 0.3,
+            "exp_func" : true,
+            "nlf1" : "relu",
+            "nlf2" : "relu",
+            "batch_normalization" : false,
+            "future_steps" : 1,
+            "time_range_minutes": 15
+     },
+    "trainer":
+    {
+        "epochs" : 40,
+        "optimizer_name" : "adamw",
+        "lr" : 1e-3
+    }
+}
