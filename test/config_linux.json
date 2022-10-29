@@ -15,7 +15,7 @@
     },
     "model":
     {
-            "model_folder" : "./models/",
+            "model_folder" : "../models/",
             "past_values" : 12,
             "input_dim" : 2,
             "hidden_dim" : 64,
