@@ -4,6 +4,7 @@
     "last_time_file" : "last_time.txt",
     "start_notification_time": "07:00",
     "end_notification_time": "01:59",
+    "wait_time_icloud": 120,
     "glucose" :
     {
             "freetyle_fingerprint" : "3,(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/Safari/,Mozilla/(Macintosh;IntelMacOSX__)AppleWebKit/(KHTML,likeGecko)Version/15.6.1 Safari/605.1.15,AppleGPU,Europe/Madrid,1,MacIntel,es-ES,es-ES,AppleComputer,Inc.,safari",
