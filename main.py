@@ -14,11 +14,13 @@ from phased_lstm import plstmglucosemodel
 from process_data.load_data import LoadData, loadScaler
 from telegram import sender
 from vault import credentials
+from logmessages.Log import LogMessages, MessageType
 import schedule
 
 class CgmPhasedLSTM:
     last_time: datetime.time
     prev_last_time: datetime.time
+    log_messages: LogMessages
     def __init__(
             self,
             _config_file,
@@ -55,6 +57,7 @@ class CgmPhasedLSTM:
             self.config.model.future_steps,
             self.config.model.time_range_minutes,
         )
+        self.log_messages = LogMessages("cgm")
 
     def loadModel(self):
         ret = plstmglucosemodel.PlstmGlucoseModel(
@@ -147,7 +150,9 @@ class CgmPhasedLSTM:
         )
 
         msg = f"\nActual glucose {_last_value} at {_last_time}\nNext glucose {_pred_value} at {next_time}\n"
-        sys.stderr.write(msg)
+        self.log_messages.write_to_log(message=msg, message_type=MessageType.ERROR)
+        #sys.stderr.write(msg)
+
         self.telegram_send.sendMessage(msg)
         self.telegram_send.sendImage(
             os.path.join(
@@ -160,42 +165,38 @@ class CgmPhasedLSTM:
                 ),
             )
         )
-        # (_x_values_time, _y_values, _x_next_value, _y_next_value
     def start_proces(self):
-        schedule.every(self.config.wait_time).seconds.until("23:59").do(self.get_gluclose_values)
+        schedule.every(self.config.wait_time).seconds.until(self.config.end_notification_time).do(self.get_gluclose_values)
     def processLoop(self):
         self.prev_last_time = None
         self.last_time = None
         self.start_proces()
-        schedule.every(1).day.at("07:00").do(self.start_proces)
+        schedule.every(1).day.at(self.config.start_notification_time).do(self.start_proces)
         while True:
             schedule.run_pending()
             time.sleep(1)
 
     def get_gluclose_values(self):
         try:
-            sys.stderr.write("\nProcesing get_glucse_values\n")
+            self.log_messages.write_to_log(message="Procesing get_glucse_values", message_type=MessageType.MESSAGE)
             data_c, data_s = self.cgs.get_last_result()
             xs, xt, xt_t = self.prepareData(data_c, data_s)
             output = self.model.predict(xs, xt)
             last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
             self.last_time = xt_t[xt_t.shape[0] - 1]
-            sys.stderr.write(
-                f"\nPrev. last time:{self.prev_last_time}\tLast time: {self.last_time}"
-            )
+            self.log_messages.write_to_log(message=f"\nPrev. last time:{self.prev_last_time}"
+                                                   f"\tLast time: {self.last_time}", message_type=MessageType.MESSAGE)
             if self.prev_last_time == None or self.last_time > self.prev_last_time:
                 pred_value = self.scaler.inverse_transform_value(output.item())[0]
-                sys.stderr.write(
-                    f"\nLast value: {last_value} prev_value: {pred_value}"
-                )
+                self.log_messages.write_to_log(message=f"\nLast value: {last_value} prev_value: {pred_value}",
+                                               message_type=MessageType.MESSAGE)
                 if not self.glucoseInRange(last_value, pred_value):
                     self.sendMessageToTelegram(
-                        xt_t, xs, last_value, pred_value, last_time
+                        xt_t, xs, last_value, pred_value, self.last_time
                     )
         except Exception as ex:
-            sys.stderr.write(str(ex))
+            self.log_messages.write_to_log(message=str(ex), message_type=MessageType.ERROR)
         self.prev_last_time = self.last_time
-
 
 if __name__ == "__main__":
 
