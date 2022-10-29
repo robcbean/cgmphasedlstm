@@ -312,7 +312,7 @@ class GetMessageFreeStytle(GetMessages):
             if generate_new_token:
                 token_single_factor: str = self.__token_login_single_factor__()
                 token_send_mobile: str = self.__request_send_code_to_mobile__(token_single_factor)
-                time.sleep(120)
+                time.sleep(60)
                 mobile_code: int = self.__get_mobile_code__()
                 token_double_factor: dict = self.__get_token_double_factor__(token_send_mobile, mobile_code)
                 self.__store__token_double__factor__(token_double_factor)
@@ -327,8 +327,9 @@ class GetMessageFreeStytle(GetMessages):
         while token_login == "":
             try:
                 token_login = self.__get_token_login__()
-            except:
-                time.sleep(5 * 60)
+            except Exception as ex:
+                sys.stderr.write(ex.message)
+                time.sleep(60)
 
         url_reports = self.__get_url_reports__(
             self.__report_url__(), self.__report_string__(), token_login

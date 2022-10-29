@@ -18,4 +18,4 @@ get_messages: GetMessageFreeStytle = GetMessageFreeStytle(
     _filename_token_double_factor="double_factor.txt"
 )
 
-token_login: str = get_messages.__get_token_login__()
+token_login: str = get_messages.__get_token_login__

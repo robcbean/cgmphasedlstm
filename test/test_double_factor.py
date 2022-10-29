@@ -23,8 +23,7 @@ def test_double_factor():
     assert get_messages.__send_code_url__ == "https://api-eu.libreview.io/auth/continue/2fa/sendcode"
     assert get_messages.__result_code_url__ == "https://api-eu.libreview.io/auth/continue/2fa/result"
 
-    token_login: str = get_messages.__get_token_login__()
-
+    token_login: str = get_messages.__get_token_login__
 
 
 def test_icloud():
