@@ -1,5 +1,4 @@
 import sys
-import datetime
 import logging
 
 SUFFIX_LOG__NAME: str = f"cgmphasedlstm.log"
