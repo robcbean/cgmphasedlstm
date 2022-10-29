@@ -165,8 +165,19 @@ class CgmPhasedLSTM:
                 ),
             )
         )
+
+    def get_until_schedule(self) -> str:
+        ret: str
+        end_mod_time: datetime.time = datetime.datetime.strptime(self.config.end_notification_time, "%H:%M").time()
+        cur_time: datetime.time = datetime.datetime.now().time()
+        next_date_str: str = datetime.date.strftime(datetime.datetime.today() + datetime.timedelta(days=1), "%Y-%m-%d")
+        if end_mod_time < cur_time:
+            ret = f"{next_date_str} {self.config.end_notification_time}"
+        else:
+            ret = self.config.end_notification_time
+        return ret
     def start_proces(self):
-        schedule.every(self.config.wait_time).seconds.until(self.config.end_notification_time).do(self.get_gluclose_values)
+        schedule.every(self.config.wait_time).seconds.until(self.get_until_schedule()).do(self.get_gluclose_values)
     def processLoop(self):
         self.prev_last_time = None
         self.last_time = None
@@ -186,7 +197,7 @@ class CgmPhasedLSTM:
             self.last_time = xt_t[xt_t.shape[0] - 1]
             self.log_messages.write_to_log(message=f"\nPrev. last time:{self.prev_last_time}"
                                                    f"\tLast time: {self.last_time}", message_type=MessageType.MESSAGE)
-            if self.prev_last_time == None or self.last_time > self.prev_last_time:
+            if self.prev_last_time is None or self.last_time > self.prev_last_time:
                 pred_value = self.scaler.inverse_transform_value(output.item())[0]
                 self.log_messages.write_to_log(message=f"\nLast value: {last_value} prev_value: {pred_value}",
                                                message_type=MessageType.MESSAGE)
