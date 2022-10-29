@@ -2,9 +2,7 @@ import sys
 import datetime
 import logging
 
-DATE_SUFFIX: str = "#SUFIX#"
-SUFFIX_LOG__NAME: str = f"log_{DATE_SUFFIX}.log"
-
+SUFFIX_LOG__NAME: str = f"cgmphasedlstm.log"
 
 class MessageType:
     ERROR: int = 0
@@ -15,24 +13,25 @@ class LogMessages:
 
     stderr: object = None
     stdout: object = None
-    log_date: datetime.date
+    logger: logging.Logger
+    app_name: str
 
-    def __init__(self, stdout=sys.stdout, stderr=sys.stderr) -> None:
+    def __init__(self, app_name: str, stdout=sys.stdout, stderr=sys.stderr) -> None:
         self.stdout = stdout
         self.stderr = stderr
-        self.log_date = datetime.datetime.today()
-        self.setup_login()
+        self.app_name = app_name
+        self.logger = self.setup_login()
+    def setup_login(self) -> logging.Logger :
+        ret: logging.Logger
 
-    def setup_login(self):
-        logging.basicConfig(filename=self.get_file_name())
-    def get_file_name(self):
-        ret: str = SUFFIX_LOG__NAME.replace(SUFFIX_LOG__NAME, DATE_SUFFIX, self.log_date.strftime("%Y%m%d"))
+        logging.basicConfig(filename=SUFFIX_LOG__NAME,
+                                format="%(asctime)s - %(message)s" )
+        ret = logging.getLogger(self.app_name)
+        ret.setLevel(logging.INFO)
         return ret
 
     def write_to_log(self, message: str, message_type: MessageType) -> None:
-        if datetime.datetime.today() != self.log_date:
-            self.log_date = datetime.datetime.today()
-            self.setup_login()
+        self.setup_login()
         if message_type == MessageType.MESSAGE:
             self.send_output_message(message)
         elif message_type == MessageType.ERROR:
@@ -42,8 +41,10 @@ class LogMessages:
 
     def send_output_message(self, message: str) -> None:
         self.stdout.write(message + "\n")
-        logging.info(message)
+        self.logger.info(message)
 
     def send_error_message(self, message: str) -> None:
         self.stderr.write(message + "\n")
-        logging.error(message)
+        self.logger.error(message)
+
+
