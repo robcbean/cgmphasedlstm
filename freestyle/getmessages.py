@@ -109,6 +109,8 @@ class GetMessageFreeStytle(GetMessages):
             ret = datetime.timedelta(hours=-0)
         return ret
 
+
+
     def __report_url__(self) -> str:
         ret: str = f'{urljoin(self.base_url, "/reports")}'
         return ret
