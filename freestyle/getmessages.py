@@ -104,9 +104,9 @@ class GetMessageFreeStytle(GetMessages):
 
     def __time_to_add__(self):
         if platform.system().lower() == "linux":
-            ret = datetime.timedelta(hours=-2)
-        else:
             ret = datetime.timedelta(hours=-1)
+        else:
+            ret = datetime.timedelta(hours=-0)
         return ret
 
     def __report_url__(self) -> str:
