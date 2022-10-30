@@ -6,8 +6,8 @@ from pytz import timezone
 def get_diff_from_utc(date_to_convert: datetime, tzname: str = "Europe/Madrid") -> timedelta:
     tz: str = timezone(tzname)
     utc: str = timezone('UTC')
-    utc.localize(datetime.now())
-    delta: timedelta = utc.localize(date_to_convert) - tz.localize(date_to_convert)
+    #utc.localize(datetime.now())
+    delta: timedelta = utc.localize(date_to_convert) - date_to_convert
     return delta
 
 
