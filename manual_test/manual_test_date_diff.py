@@ -5,7 +5,7 @@ def get_diff(now, tzname):
     tz = timezone(tzname)
     utc = timezone('UTC')
     utc.localize(datetime.now())
-    delta =  utc.localize(now) - tz.localize(now)
+    delta =  utc.localize(now) - tz.(now)
     return delta
 
 now = datetime.utcnow()

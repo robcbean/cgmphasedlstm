@@ -16,6 +16,7 @@ from telegram import sender
 from vault import credentials
 from logmessages.Log import LogMessages, MessageType
 import schedule
+from converttime import date_machine_to_utc, utc_to_date_machine, utc_to_display
 
 class CgmPhasedLSTM:
     last_time: datetime.time
@@ -195,15 +196,15 @@ class CgmPhasedLSTM:
             output = self.model.predict(xs, xt)
             last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
             self.last_time = xt_t[xt_t.shape[0] - 1]
-            self.log_messages.write_to_log(message=f"\nPrev. last time:{self.prev_last_time}"
-                                                   f"\tLast time: {self.last_time}", message_type=MessageType.MESSAGE)
+            self.log_messages.write_to_log(message=f"\nPrev. last time:{utc_to_display(self.prev_last_time)}"
+                                                   f"\tLast time: {utc_to_display(self.last_time)}", message_type=MessageType.MESSAGE)
             if self.prev_last_time is None or self.last_time > self.prev_last_time:
                 pred_value = self.scaler.inverse_transform_value(output.item())[0]
                 self.log_messages.write_to_log(message=f"\nLast value: {last_value} prev_value: {pred_value}",
                                                message_type=MessageType.MESSAGE)
                 if not self.glucoseInRange(last_value, pred_value):
                     self.sendMessageToTelegram(
-                        xt_t, xs, last_value, pred_value, self.last_time
+                        xt_t, xs, last_value, pred_value, utc_to_display(self.last_time)
                     )
         except Exception as ex:
             self.log_messages.write_to_log(message=str(ex), message_type=MessageType.ERROR)

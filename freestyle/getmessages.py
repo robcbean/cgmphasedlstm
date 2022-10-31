@@ -12,8 +12,7 @@ import requests
 from lxml import html
 from mako.template import Template
 from freestyle.icloudfile import DoubleFactorManager
-
-
+from converttime import date_machine_to_utc
 
 class GetMessages:
     def __init__(self, _user: str, _password: str, _past_values: int):
@@ -36,9 +35,10 @@ class GetMessages:
         self.cg_interval_min_p = _cg_interval_min
 
 
+
 class GetMessageFreeStytle(GetMessages):
 
-    ICLOUD_FILE:str = "Shortcuts/libreview.txt"
+    ICLOUD_FILE: str = "Shortcuts/libreview.txt"
 
     double_factor_manager: DoubleFactorManager
     double_factor: bool
@@ -48,6 +48,7 @@ class GetMessageFreeStytle(GetMessages):
     icloud_user: str
     icloud_password: str
     filename_token_double_factor: str
+    tz_to_display: str
 
     def __init__(
             self,
@@ -60,7 +61,8 @@ class GetMessageFreeStytle(GetMessages):
             _double_factor: bool = False,
             _icloud_user: str = "",
             _icloud_password: str = "",
-            _filename_token_double_factor: str = ""
+            _filename_token_double_factor: str = "",
+            _tz_to_display: str = "Europe/Madrid"
     ):
         super(GetMessageFreeStytle, self).__init__(_user, _password, _past_values)
         self.cg_interval_min = 15
@@ -68,6 +70,7 @@ class GetMessageFreeStytle(GetMessages):
         self.base_url = _base_url
         self.report_string_template = _report_string_template
         self.double_factor = _double_factor
+        self.tz_to_display = _tz_to_display
         if self.double_factor:
             self.icloud_user = _icloud_user
             self.icloud_password = _icloud_password
@@ -76,6 +79,8 @@ class GetMessageFreeStytle(GetMessages):
                 = DoubleFactorManager(icloud_user=self.icloud_user, icloud_password=self.icloud_password,
                                       icloud_file=GetMessageFreeStytle.ICLOUD_FILE)
         self.__check_parameters()
+
+
 
     def __check_parameters(self):
         error_msg: str = ""
@@ -101,15 +106,6 @@ class GetMessageFreeStytle(GetMessages):
     def __login_url__(self):
         ret = f'{urljoin(self.base_url, "auth/login")}'
         return ret
-
-    def __time_to_add__(self):
-        if platform.system().lower() == "linux":
-            ret = datetime.timedelta(hours=-1)
-        else:
-            ret = datetime.timedelta(hours=-0)
-        return ret
-
-
 
     def __report_url__(self) -> str:
         ret: str = f'{urljoin(self.base_url, "/reports")}'
@@ -142,6 +138,7 @@ class GetMessageFreeStytle(GetMessages):
         response_login = requests.post(login_url, json=params).json()
         ret = response_login["data"]["authTicket"]["token"]
         return ret
+
 
     def __report_string__(self):
         today_date = int(
@@ -206,14 +203,13 @@ class GetMessageFreeStytle(GetMessages):
         send_values = []
         send_dates = []
 
-        hours_to_add = self.__time_to_add__()
         for day in _data_result:
             cont_data = day["Glucose"]
             for data_c in cont_data:
                 for value_c in data_c:
                     time_value = int(value_c["Timestamp"])
                     date_value = (
-                            datetime.datetime.fromtimestamp(time_value) + hours_to_add
+                            date_machine_to_utc(datetime.datetime.fromtimestamp(time_value))
                     )
                     if (
                             date_value.hour != 0
@@ -228,7 +224,7 @@ class GetMessageFreeStytle(GetMessages):
                 val = data_s["Timestamp"]
                 time_value = int(val)
                 date_value = datetime.datetime.fromtimestamp(time_value)
-                date_value = date_value + hours_to_add
+                date_value = date_machine_to_utc(date_value)
                 if (
                         date_value.hour != 0
                         and date_value.minute != 0
@@ -307,7 +303,8 @@ class GetMessageFreeStytle(GetMessages):
             if "expire_data_timestamp" not in token_double_factor.keys():
                 generate_new_token = True
             else:
-                if token_double_factor['expire_data_timestamp'] > datetime.datetime.now().timestamp():
+                if token_double_factor['expire_data_timestamp'] > \
+                        date_machine_to_utc(datetime.datetime.now().timestamp()):
                     ret = token_double_factor['token']
                 else:
                     generate_new_token = True
