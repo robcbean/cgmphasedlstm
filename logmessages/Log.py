@@ -19,7 +19,7 @@ class LogMessages:
         self.stderr = stderr
         self.app_name = app_name
 
-    def get_logger(self, message_type: MessageType) -> logging.Logger:
+    def get_logger(self, message_type: int) -> logging.Logger:
         ret: logging.Logger
 
         logging.basicConfig(filename=SUFFIX_LOG__NAME,
@@ -31,7 +31,7 @@ class LogMessages:
             ret.setLevel(logging.ERROR)
         return ret
 
-    def write_to_log(self, message: str, message_type: MessageType) -> None:
+    def write_to_log(self, message: str, message_type: int) -> None:
         if message_type == MessageType.MESSAGE:
             self.send_output_message(message, message_type)
         elif message_type == MessageType.ERROR:
@@ -44,10 +44,10 @@ class LogMessages:
         ret: str = message.replace("\n", " ")
         return ret
 
-    def send_output_message(self, message: str, message_type: MessageType) -> None:
+    def send_output_message(self, message: str, message_type: int) -> None:
         self.stdout.write(message + "\n")
         self.get_logger(message_type).info(self.remove_new_lines(message))
 
-    def send_error_message(self, message: str, message_type: MessageType) -> None:
+    def send_error_message(self, message: str, message_type: int) -> None:
         self.stderr.write(message + "\n")
         self.get_logger(message_type).error(self.remove_new_lines(message))

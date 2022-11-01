@@ -16,11 +16,14 @@ from telegram import sender
 from vault import credentials
 from logmessages.Log import LogMessages, MessageType
 import schedule
+from converttime import utc_to_display
+
 
 class CgmPhasedLSTM:
     last_time: datetime.time
     prev_last_time: datetime.time
     log_messages: LogMessages
+
     def __init__(
             self,
             _config_file,
@@ -32,7 +35,7 @@ class CgmPhasedLSTM:
             _icloud_password
     ):
         self.config = config.loadFromFile(_config_file)
-        self.model = self.loadModel()
+        self.model = self.load_model()
         self.scaler = loadScaler(
             self.model.getModelName(), self.config.model.model_folder
         )
@@ -59,7 +62,7 @@ class CgmPhasedLSTM:
         )
         self.log_messages = LogMessages("cgm")
 
-    def loadModel(self):
+    def load_model(self):
         ret = plstmglucosemodel.PlstmGlucoseModel(
             _input_dim=self.config.model.input_dim,
             _batch_size=self.config.model.batch_size,
@@ -82,13 +85,13 @@ class CgmPhasedLSTM:
             raise Exception(f"The model {filename} don" "t exists.")
         return ret
 
-    def scaleData(self, _data):
+    def scale_data(self, _data):
         ret = self.scaler.transform_values(_data)
         return ret
 
-    def prepareData(self, _data_c, _data_s):
+    def prepare_data(self, _data_c, _data_s):
         n_records = _data_c.shape[0]
-        values_to_pred = _data_c[(n_records - self.model.past_values): (n_records)]
+        values_to_pred = _data_c[(n_records - self.model.past_values): n_records]
         cgm_values = values_to_pred.values
         cgm_values_scaled = self.scaler.transform_values(cgm_values)
         cgm_time = values_to_pred.index
@@ -114,7 +117,6 @@ class CgmPhasedLSTM:
         y_values = np.insert(y_values, len(y_values), _y_next_value)
         y_values = y_values.round(2)
 
-        fig = plt.figure()
         plt.xlabel("Dia/Hora")
         plt.ylabel("Glucosa")
 
@@ -127,7 +129,7 @@ class CgmPhasedLSTM:
 
         return ret
 
-    def glucoseInRange(self, _last_value, _pred_value):
+    def glucose_in_range(self, _last_value, _pred_value):
         ret = True
         if _pred_value != 0:
             variation = (_last_value - _pred_value) / _pred_value * 100
@@ -143,7 +145,7 @@ class CgmPhasedLSTM:
 
         return ret
 
-    def sendMessageToTelegram(self, _xt_t, _xs, _last_value, _pred_value, _last_time):
+    def send_message_to_telegram(self, _xt_t, _xs, _last_value, _pred_value, _last_time):
 
         next_time = _last_time + datetime.timedelta(
             minutes=self.config.model.time_range_minutes
@@ -151,7 +153,6 @@ class CgmPhasedLSTM:
 
         msg = f"\nActual glucose {_last_value} at {_last_time}\nNext glucose {_pred_value} at {next_time}\n"
         self.log_messages.write_to_log(message=msg, message_type=MessageType.ERROR)
-        #sys.stderr.write(msg)
 
         self.telegram_send.sendMessage(msg)
         self.telegram_send.sendImage(
@@ -176,9 +177,11 @@ class CgmPhasedLSTM:
         else:
             ret = self.config.end_notification_time
         return ret
+
     def start_proces(self):
         schedule.every(self.config.wait_time).seconds.until(self.get_until_schedule()).do(self.get_gluclose_values)
-    def processLoop(self):
+
+    def process_loop(self):
         self.prev_last_time = None
         self.last_time = None
         self.start_proces()
@@ -191,23 +194,25 @@ class CgmPhasedLSTM:
         try:
             self.log_messages.write_to_log(message="Procesing get_glucse_values", message_type=MessageType.MESSAGE)
             data_c, data_s = self.cgs.get_last_result()
-            xs, xt, xt_t = self.prepareData(data_c, data_s)
+            xs, xt, xt_t = self.prepare_data(data_c, data_s)
             output = self.model.predict(xs, xt)
             last_value = self.scaler.inverse_transform_value(xs[xs.shape[0] - 1])[0]
             self.last_time = xt_t[xt_t.shape[0] - 1]
-            self.log_messages.write_to_log(message=f"\nPrev. last time:{self.prev_last_time}"
-                                                   f"\tLast time: {self.last_time}", message_type=MessageType.MESSAGE)
+            message: str = f"\nPrev. last time:{self.prev_last_time}"
+            message = message + f"\tLast time: {self.last_time}"
+            self.log_messages.write_to_log(message=message, message_type=MessageType.MESSAGE)
             if self.prev_last_time is None or self.last_time > self.prev_last_time:
                 pred_value = self.scaler.inverse_transform_value(output.item())[0]
                 self.log_messages.write_to_log(message=f"\nLast value: {last_value} prev_value: {pred_value}",
                                                message_type=MessageType.MESSAGE)
-                if not self.glucoseInRange(last_value, pred_value):
-                    self.sendMessageToTelegram(
+                if not self.glucose_in_range(last_value, pred_value):
+                    self.send_message_to_telegram(
                         xt_t, xs, last_value, pred_value, self.last_time
                     )
         except Exception as ex:
-            self.log_messages.write_to_log(message=str(ex), message_type=MessageType.ERROR)
+            self.log_messages.write_to_log(message=f"{str(ex)}", message_type=MessageType.ERROR)
         self.prev_last_time = self.last_time
+
 
 if __name__ == "__main__":
 
@@ -228,4 +233,4 @@ if __name__ == "__main__":
         _icloud_user=vault_cred_mgr.icloud_user,
         _icloud_password=vault_cred_mgr.icloud_password
     )
-    freeStyleML.processLoop()
+    freeStyleML.process_loop()
