@@ -9,7 +9,7 @@ def get_machine_tz() -> str:
     ret: str = time.tzname[0]
     return ret
 
-def get_diff_from_utc(date_to_convert: datetime.datetime, tzname: str = "Europe/Madrid") -> datetime.timedelta:
+def get_diff_from_utc(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.timedelta:
     tz = timezone(tzname)
     utc = timezone('UTC')
     utc.localize(datetime.datetime.now())
@@ -17,13 +17,13 @@ def get_diff_from_utc(date_to_convert: datetime.datetime, tzname: str = "Europe/
     return delta
 
 
-def convert_to_utc(date_to_convert: datetime.datetime, tzname: str = "Europe/Madrid") -> datetime.datetime:
+def convert_to_utc(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.datetime:
     time_delta: datetime.timedelta = get_diff_from_utc(date_to_convert=date_to_convert, tzname=tzname)
     ret: datetime.datetime = date_to_convert - time_delta
     return ret
 
 
-def convert_from_utf(date_to_convert: datetime.datetime, tzname: str = "Europe/Madrid") -> datetime.datetime:
+def convert_from_utf(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.datetime:
     time_delta: datetime.timedelta = get_diff_from_utc(date_to_convert=date_to_convert, tzname=tzname)
     ret: datetime.datetime = date_to_convert + time_delta
     return ret
@@ -39,6 +39,6 @@ def utc_to_datetime_machine(date_to_convert: datetime.datetime) -> datetime.date
     return ret
 
 
-def utc_to_display(date_to_convert: datetime, tz_to_display: str = "Europe/Medrid") -> datetime.datetime:
+def utc_to_display(date_to_convert: datetime, tz_to_display: str = "CET") -> datetime.datetime:
     ret: datetime.datetime = convert_from_utf(date_to_convert=date_to_convert, tzname=tz_to_display)
     return ret
