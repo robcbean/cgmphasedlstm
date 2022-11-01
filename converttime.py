@@ -19,13 +19,13 @@ def get_diff_from_utc(date_to_convert: datetime.datetime, tzname: str = "CET") -
 
 def convert_to_utc(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.datetime:
     time_delta: datetime.timedelta = get_diff_from_utc(date_to_convert=date_to_convert, tzname=tzname)
-    ret: datetime.datetime = date_to_convert - time_delta
+    ret: datetime.datetime = date_to_convert + time_delta
     return ret
 
 
 def convert_from_utf(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.datetime:
     time_delta: datetime.timedelta = get_diff_from_utc(date_to_convert=date_to_convert, tzname=tzname)
-    ret: datetime.datetime = date_to_convert + time_delta
+    ret: datetime.datetime = date_to_convert - time_delta
     return ret
 
 
