@@ -1,7 +1,6 @@
 import datetime
 import json
 import os
-import platform
 import sys
 import time
 from urllib.parse import urljoin
@@ -12,7 +11,8 @@ import requests
 from lxml import html
 from mako.template import Template
 from freestyle.icloudfile import DoubleFactorManager
-from converttime import date_machine_to_utc
+from converttime import utc_to_display
+
 
 class GetMessages:
     def __init__(self, _user: str, _password: str, _past_values: int):
@@ -33,7 +33,6 @@ class GetMessages:
     @cg_interval_min.setter
     def cg_interval_min(self, _cg_interval_min):
         self.cg_interval_min_p = _cg_interval_min
-
 
 
 class GetMessageFreeStytle(GetMessages):
@@ -80,8 +79,6 @@ class GetMessageFreeStytle(GetMessages):
                                       icloud_file=GetMessageFreeStytle.ICLOUD_FILE)
         self.__check_parameters()
 
-
-
     def __check_parameters(self):
         error_msg: str = ""
 
@@ -102,7 +99,6 @@ class GetMessageFreeStytle(GetMessages):
         if error_msg != "":
             raise Exception(error_msg)
 
-
     def __login_url__(self):
         ret = f'{urljoin(self.base_url, "auth/login")}'
         return ret
@@ -115,6 +111,7 @@ class GetMessageFreeStytle(GetMessages):
     def __send_code_url__(self) -> str:
         ret: str = f'{urljoin(self.base_url, "/auth/continue/2fa/sendcode")}'
         return ret
+
     @property
     def __result_code_url__(self) -> str:
         ret: str = f'{urljoin(self.base_url, "/auth/continue/2fa/result")}'
@@ -128,10 +125,6 @@ class GetMessageFreeStytle(GetMessages):
         }
         return ret
 
-    def __token_header__(self, _token_login):
-        ret = {"Autorization": f"Bearer {_token_login}"}
-        return ret
-
     def __token_login_single_factor__(self):
         login_url = self.__login_url__()
         params = self.__login_params__()
@@ -139,12 +132,10 @@ class GetMessageFreeStytle(GetMessages):
         ret = response_login["data"]["authTicket"]["token"]
         return ret
 
-
     def __report_string__(self):
         today_date = int(
             (datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds()
         )
-        # today_date = int((datetime.datetime.now(datetime.timezone.utc) - datetime.datetime(1970, 1, 1)).total_seconds())
         start_date = today_date - (24 * 60 * 60 + 60)
         if not os.path.exists(self.report_string_template):
             raise Exception(
@@ -157,7 +148,7 @@ class GetMessageFreeStytle(GetMessages):
         return ret
 
     def get_token_header(self, token: str) -> dict:
-        token_header: dict  = {"Authorization": "Bearer " + token}
+        token_header: dict = {"Authorization": "Bearer " + token}
         return token_header
 
     def __get_url_reports__(self, _report_url, _reports_string, _token_login):
@@ -208,8 +199,9 @@ class GetMessageFreeStytle(GetMessages):
             for data_c in cont_data:
                 for value_c in data_c:
                     time_value = int(value_c["Timestamp"])
+                    date_value_timestamp: datetime.datetime = datetime.datetime.fromtimestamp(time_value)
                     date_value = (
-                            date_machine_to_utc(datetime.datetime.fromtimestamp(time_value))
+                            utc_to_display(date_value_timestamp)
                     )
                     if (
                             date_value.hour != 0
@@ -224,7 +216,7 @@ class GetMessageFreeStytle(GetMessages):
                 val = data_s["Timestamp"]
                 time_value = int(val)
                 date_value = datetime.datetime.fromtimestamp(time_value)
-                date_value = date_machine_to_utc(date_value)
+                date_value = utc_to_display(date_value)
                 if (
                         date_value.hour != 0
                         and date_value.minute != 0
@@ -244,8 +236,6 @@ class GetMessageFreeStytle(GetMessages):
 
         return ret_c, ret_s
 
-
-
     def __request_send_code_to_mobile__(self, _token: str) -> str:
         message: dict = {
             "isPrimaryMethod": True
@@ -259,6 +249,7 @@ class GetMessageFreeStytle(GetMessages):
         ret: int = self.double_factor_manager.get_code()
 
         return ret
+
     def __get_token_double_factor__(self, _token: str, _code: int) -> dict:
         message: dict = {
             "code": str(_code),
@@ -304,7 +295,7 @@ class GetMessageFreeStytle(GetMessages):
                 generate_new_token = True
             else:
                 if token_double_factor['expire_data_timestamp'] > \
-                        date_machine_to_utc(datetime.datetime.now().timestamp()):
+                        datetime.datetime.now().timestamp():
                     ret = token_double_factor['token']
                 else:
                     generate_new_token = True
@@ -327,7 +318,7 @@ class GetMessageFreeStytle(GetMessages):
             try:
                 token_login = self.__get_token_login__()
             except Exception as ex:
-                sys.stderr.write(ex.message)
+                sys.stderr.write(str(ex))
                 time.sleep(60)
 
         url_reports = self.__get_url_reports__(
