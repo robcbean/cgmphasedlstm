@@ -49,7 +49,8 @@ class CgmPhasedLSTM:
             _icloud_user=_icloud_user,
             _icloud_password=_icloud_password,
             _filename_token_double_factor="double_factor.txt",
-            _double_factor=True
+            _double_factor=True,
+            _tz_data=self.config.tz_data
         )
         self.telegram_send = sender.TelegramSender(_telegram_chat, _telegram_token)
         self.loader = LoadData()
@@ -231,6 +232,6 @@ if __name__ == "__main__":
         _telegram_chat=vault_cred_mgr.telegram_chat,
         _telegram_token=vault_cred_mgr.telegram_token,
         _icloud_user=vault_cred_mgr.icloud_user,
-        _icloud_password=vault_cred_mgr.icloud_password
+        _icloud_password=vault_cred_mgr.icloud_password,
     )
     freeStyleML.process_loop()
