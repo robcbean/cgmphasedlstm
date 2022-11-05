@@ -4,7 +4,7 @@
     "last_time_file" : "last_time.txt",
     "start_notification_time": "07:00",
     "end_notification_time": "01:59",
-    "display_time_zone": "Europe/Madrid",
+    "tz_data": "UTC",
     "wait_time_icloud": 120,
     "glucose" :
     {

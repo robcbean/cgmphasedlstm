@@ -47,7 +47,7 @@ class GetMessageFreeStytle(GetMessages):
     icloud_user: str
     icloud_password: str
     filename_token_double_factor: str
-    tz_to_display: str
+    tz_data: str
 
     def __init__(
             self,
@@ -61,7 +61,7 @@ class GetMessageFreeStytle(GetMessages):
             _icloud_user: str = "",
             _icloud_password: str = "",
             _filename_token_double_factor: str = "",
-            _tz_to_display: str = "Europe/Madrid"
+            _tz_data: str = "Europe/Madrid"
     ):
         super(GetMessageFreeStytle, self).__init__(_user, _password, _past_values)
         self.cg_interval_min = 15
@@ -69,7 +69,7 @@ class GetMessageFreeStytle(GetMessages):
         self.base_url = _base_url
         self.report_string_template = _report_string_template
         self.double_factor = _double_factor
-        self.tz_to_display = _tz_to_display
+        self.tz_data = _tz_data
         if self.double_factor:
             self.icloud_user = _icloud_user
             self.icloud_password = _icloud_password
@@ -200,7 +200,7 @@ class GetMessageFreeStytle(GetMessages):
                 for value_c in data_c:
                     time_value = int(value_c["Timestamp"])
                     date_value_timestamp: datetime.datetime =\
-                        datetime.datetime.fromtimestamp(time_value, pytz.timezone("UTC"))
+                        datetime.datetime.fromtimestamp(time_value, pytz.timezone(self.tz_data))
                     date_value = (
                             date_value_timestamp
                     )
@@ -216,7 +216,7 @@ class GetMessageFreeStytle(GetMessages):
             for data_s in sen_data:
                 val = data_s["Timestamp"]
                 time_value = int(val)
-                date_value = datetime.datetime.fromtimestamp(time_value, pytz.timezone("UTC"))
+                date_value = datetime.datetime.fromtimestamp(time_value, pytz.timezone(self.tz_data))
                 if (
                         date_value.hour != 0
                         and date_value.minute != 0
