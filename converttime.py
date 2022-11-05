@@ -9,12 +9,22 @@ def get_machine_tz() -> str:
     ret: str = time.tzname[0]
     return ret
 
-def get_diff_from_utc(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.timedelta:
-    tz = timezone(tzname)
-    utc = timezone('UTC')
+def get_diff_from_tz(date_to_convert: datetime.datetime, tzname_src: str= "UTC",
+                     tzname_dst: str = "CET") -> datetime.timedelta:
+    tz = timezone(tzname_dst)
+    utc = timezone(tzname_src)
     utc.localize(datetime.datetime.now())
     delta: datetime.timedelta = utc.localize(date_to_convert) - tz.localize(date_to_convert)
     return delta
+
+def convert_date_from_tz(date_to_convert: datetime.datetime, tzname_src: str= "UTC",
+                     tzname_dst: str = "CET") -> datetime.datetime:
+    ret: datetime.datetime = date_to_convert + get_diff_from_tz(date_to_convert, tzname_src, tzname_dst)
+    return ret
+
+def get_diff_from_utc(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.timedelta:
+    return get_diff_from_tz(date_to_convert=date_to_convert, tzname_src="UTC", tzname_dst=tzname)
+
 
 
 def convert_to_utc(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.datetime:
