@@ -199,9 +199,8 @@ class GetMessageFreeStytle(GetMessages):
             for data_c in cont_data:
                 for value_c in data_c:
                     time_value = int(value_c["Timestamp"])
-                    date_value_timestamp: datetime.datetime = datetime.datetime.fromtimestamp(time_value, pytz.timezone("UTC"))
-                    #date_value_timestamp = utc_to_display(date_to_convert=date_value_timestamp,
-                    #                                     tz_to_display=self.tz_to_display)
+                    date_value_timestamp: datetime.datetime =\
+                        datetime.datetime.fromtimestamp(time_value, pytz.timezone("UTC"))
                     date_value = (
                             date_value_timestamp
                     )
@@ -218,7 +217,6 @@ class GetMessageFreeStytle(GetMessages):
                 val = data_s["Timestamp"]
                 time_value = int(val)
                 date_value = datetime.datetime.fromtimestamp(time_value, pytz.timezone("UTC"))
-                #date_value = utc_to_display(date_to_convert=date_value, tz_to_display=self.tz_to_display)
                 if (
                         date_value.hour != 0
                         and date_value.minute != 0
