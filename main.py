@@ -146,11 +146,15 @@ class CgmPhasedLSTM:
 
         return ret
 
+    def calc_next_time(self, _last_time):
+        ret = _last_time + datetime.timedelta(
+            minutes=self.config.model.time_range_minutes * self.config.model.future_steps
+        )
+        return ret
+
     def send_message_to_telegram(self, _xt_t, _xs, _last_value, _pred_value, _last_time):
 
-        next_time = _last_time + datetime.timedelta(
-            minutes=self.config.model.time_range_minutes
-        )
+        next_time = self.calc_next_time(_last_time=_last_time)
 
         msg = f"\nActual glucose {_last_value} at {_last_time}\nNext glucose {_pred_value} at {next_time}\n"
         self.log_messages.write_to_log(message=msg, message_type=MessageType.ERROR)
@@ -204,7 +208,9 @@ class CgmPhasedLSTM:
             self.log_messages.write_to_log(message=message, message_type=MessageType.MESSAGE)
             if self.prev_last_time is None or self.last_time > self.prev_last_time:
                 pred_value = self.scaler.inverse_transform_value(output.item())[0]
-                self.log_messages.write_to_log(message=f"\nLast value: {last_value} prev_value: {pred_value}",
+                out_message = f"\nLast value: {last_value} prev_value: {pred_value} " \
+                              f"at {self.calc_next_time(self.last_time)}"
+                self.log_messages.write_to_log(message=out_message,
                                                message_type=MessageType.MESSAGE)
                 if not self.glucose_in_range(last_value, pred_value):
                     self.send_message_to_telegram(
