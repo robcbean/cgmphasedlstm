@@ -31,7 +31,7 @@
             "nlf1" : "relu",
             "nlf2" : "relu",
             "batch_normalization" : false,
-            "future_steps" : 1,
+            "future_steps" : 2,
             "time_range_minutes": 15
      },
     "trainer":

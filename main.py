@@ -149,7 +149,7 @@ class CgmPhasedLSTM:
     def send_message_to_telegram(self, _xt_t, _xs, _last_value, _pred_value, _last_time):
 
         next_time = _last_time + datetime.timedelta(
-            minutes=self.config.model.time_range_minutes
+            minutes=self.config.model.time_range_minutes * self.config.future_steps
         )
 
         msg = f"\nActual glucose {_last_value} at {_last_time}\nNext glucose {_pred_value} at {next_time}\n"
