@@ -4,7 +4,6 @@ from shutil import copyfileobj
 
 import pyicloud.services.drive
 from pyicloud import PyiCloudService
-from typing import Any
 
 class DoubleFactorManager:
     icloud_user: str
