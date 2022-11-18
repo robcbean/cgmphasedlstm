@@ -9,13 +9,11 @@ class DoubleFactorManager:
     icloud_user: str
     icloud_password: str
     icloud_file: str
-    pyicloud_service: PyiCloudService
 
     def __init__(self, icloud_user: str, icloud_password: str, icloud_file: str):
         self.icloud_user = icloud_user
         self.icloud_password = icloud_password
         self.icloud_file = icloud_file
-        self.pyicloud_service = self.get_pyicloud_service()
 
     def get_pyicloud_service(self) -> PyiCloudService:
         ret: PyiCloudService = PyiCloudService(apple_id=self.icloud_user)
@@ -39,7 +37,7 @@ class DoubleFactorManager:
         path_string: list = self.icloud_file.split(os.path.sep)
         for file in path_string:
             if cur_file is None:
-                cur_file = self.pyicloud_service.drive[file]
+                cur_file = self.get_pyicloud_service().drive[file]
             else:
                 cur_file = cur_file[file]
 
