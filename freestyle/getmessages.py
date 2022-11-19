@@ -11,15 +11,21 @@ import requests
 from lxml import html
 from mako.template import Template
 from freestyle.icloudfile import DoubleFactorManager
+from logmessages.Log import LogMessages, MessageType
 import pytz
+
+TIME_TO_RETRY_ERROR_MESSAGE: int = 8
+MAX_NUMBER_ERRORS: int = 4
 
 
 class GetMessages:
+    log_message: LogMessages
     def __init__(self, _user: str, _password: str, _past_values: int):
         self.user: str = _user
         self.password: str = _password
         self.past_values: int = _past_values
         self.cg_interval_min_p: int = 0
+        self.log_message = LogMessages()
 
     def get_last_result(self):
         raise Exception("getLastResult not implemented")
@@ -48,6 +54,7 @@ class GetMessageFreeStytle(GetMessages):
     icloud_password: str
     filename_token_double_factor: str
     tz_data: str
+    n_error_get_data: int
 
     def __init__(
             self,
@@ -78,6 +85,7 @@ class GetMessageFreeStytle(GetMessages):
                 = DoubleFactorManager(icloud_user=self.icloud_user, icloud_password=self.icloud_password,
                                       icloud_file=GetMessageFreeStytle.ICLOUD_FILE)
         self.__check_parameters()
+        self.n_error_get_data = 0
 
     def __check_parameters(self):
         error_msg: str = ""
@@ -246,6 +254,7 @@ class GetMessageFreeStytle(GetMessages):
         return ret
 
     def __get_mobile_code__(self) -> int:
+
         ret: int = self.double_factor_manager.get_code()
 
         return ret
@@ -317,9 +326,12 @@ class GetMessageFreeStytle(GetMessages):
         while token_login == "":
             try:
                 token_login = self.__get_token_login__()
+                self.n_error_get_data = 0
             except Exception as ex:
-                sys.stderr.write(str(ex))
-                time.sleep(60)
+                self.log_message.write_to_log(message=str(ex), message_type=MessageType.ERROR)
+                if self.n_error_get_data < MAX_NUMBER_ERRORS:
+                    self.n_error_get_data = self.n_error_get_data + 1
+                time.sleep(pow(self.n_error_get_data, TIME_TO_RETRY_ERROR_MESSAGE))
 
         url_reports = self.__get_url_reports__(
             self.__report_url__(), self.__report_string__(), token_login

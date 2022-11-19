@@ -14,7 +14,7 @@ class LogMessages:
     stdout: object = None
     app_name: str
 
-    def __init__(self, app_name: str, stdout=sys.stdout, stderr=sys.stderr) -> None:
+    def __init__(self, app_name: str = "cgm", stdout=sys.stdout, stderr=sys.stderr) -> None:
         self.stdout = stdout
         self.stderr = stderr
         self.app_name = app_name
@@ -31,7 +31,7 @@ class LogMessages:
             ret.setLevel(logging.ERROR)
         return ret
 
-    def write_to_log(self, message: str, message_type: int) -> None:
+    def write_to_log(self, message: str, message_type: int = MessageType.MESSAGE) -> None:
         if message_type == MessageType.MESSAGE:
             self.send_output_message(message, message_type)
         elif message_type == MessageType.ERROR:
