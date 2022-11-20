@@ -2,10 +2,10 @@
     "send_message" : true,
     "wait_time" : 120,
     "last_time_file" : "last_time.txt",
+    "tz_schedule": "Europe/Madrid",
     "start_notification_time": "07:00",
     "end_notification_time": "00:01",
     "tz_data": "UTC",
-    "tz_schedule": "Europe/Madrid",
     "wait_time_icloud": 120,
     "glucose" :
     {

@@ -186,6 +186,7 @@ class CgmPhasedLSTM:
     def start_proces(self):
         schedule.every(self.config.wait_time).seconds.until(self.get_until_schedule()).do(self.get_gluclose_values)
 
+
     def process_loop(self):
         self.prev_last_time = None
         self.last_time = None

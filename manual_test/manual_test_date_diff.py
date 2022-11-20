@@ -1,7 +1,7 @@
 import datetime
 import converttime
 
-date_time_utc: datetime.datetime = datetime.datetime.now() + datetime.timedelta(hours=-1)
+date_time_utc: datetime.datetime = datetime.datetime.now()
 date_time_local: datetime.datetime = \
     converttime.convert_from_tz_to_machine(date_to_convert=date_time_utc, tzname="Europe/Madrid")
 
