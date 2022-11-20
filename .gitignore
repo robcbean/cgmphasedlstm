@@ -5,6 +5,7 @@ __pycache__/
 libreview.txt
 double_factor.txt
 *.png
+*.DS_Store
 
 # C extensions
 *.so
