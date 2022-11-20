@@ -6,6 +6,7 @@ libreview.txt
 double_factor.txt
 *.png
 *.DS_Store
+.DS_Store
 
 # C extensions
 *.so
