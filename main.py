@@ -13,10 +13,10 @@ from freestyle import getmessages
 from phased_lstm import plstmglucosemodel
 from process_data.load_data import LoadData, loadScaler
 from telegram import sender
+import converttime
 from vault import credentials
 from logmessages.Log import LogMessages, MessageType
 import schedule
-from converttime import utc_to_display
 
 
 class CgmPhasedLSTM:
@@ -175,7 +175,11 @@ class CgmPhasedLSTM:
     def get_until_schedule(self) -> str:
         ret: str
         end_mod_time: datetime.time = datetime.datetime.strptime(self.config.end_notification_time, "%H:%M").time()
-        cur_time: datetime.time = datetime.datetime.now().time()
+        cur_data_time: datetime.datetime = datetime.datetime.now()
+        time_delta: datetime.timedelta = converttime.get_time_diff_from_tz(tzname_dst=self.config.tz_schedule
+                                                                           , tzname_src=converttime.get_machine_tz())
+        cur_data_time = cur_data_time + time_delta
+        cur_time: datetime.time = cur_data_time.time()
         next_date_str: str = datetime.date.strftime(datetime.datetime.today() + datetime.timedelta(days=1), "%Y-%m-%d")
         if end_mod_time < cur_time:
             ret = f"{next_date_str} {self.config.end_notification_time}"
@@ -191,7 +195,13 @@ class CgmPhasedLSTM:
         self.prev_last_time = None
         self.last_time = None
         self.start_proces()
+
+        #TODO : Convert date 2 time
+        start_notification_fime: datetime.time \
+            = datetime.datetime.strptime(self.config.start_notification_time, "%H:%M").time()
+
         schedule.every(1).day.at(self.config.start_notification_time).do(self.start_proces)
+
         while True:
             schedule.run_pending()
             time.sleep(1)
