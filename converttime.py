@@ -15,10 +15,16 @@ def get_diff_from_tz(date_to_convert: datetime.datetime, tzname_src: str = "UTC"
                      tzname_dst: str = "CET") -> datetime.timedelta:
     tz = timezone(tzname_dst)
     utc = timezone(tzname_src)
-    utc.localize(datetime.datetime.now())
     delta: datetime.timedelta = utc.localize(date_to_convert) - tz.localize(date_to_convert)
     return delta
 
+
+def get_time_diff_from_tz(date_to_convert: datetime.datetime, tzname_src: str = "UTC",
+                     tzname_dst: str = "CET") -> datetime.timedelta:
+    tz = timezone(tzname_dst)
+    utc = timezone(tzname_src)
+    delta: datetime.timedelta = utc.localize(date_to_convert) - tz.localize(date_to_convert)
+    return delta
 
 def convert_date_from_tz(date_to_convert: datetime.datetime, tzname_src: str = "UTC",
                          tzname_dst: str = "CET") -> datetime.datetime:
@@ -49,10 +55,10 @@ def convert_from_machine_to_tz(date_to_convert: datetime.datetime, tzname: str =
     ret: datetime.datetime = date_to_convert + time_dif
     return ret
 
-def convert_from_tz_to_machine(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.datetime:
+def convert_time_from_tz_to_machine(date_to_convert: datetime.time, tzname: str = "CET") -> datetime.time:
     machine_tz: str = get_machine_tz()
     time_dif: datetime.timedelta =\
-        get_diff_from_tz(date_to_convert=date_to_convert, tzname_src=tzname, tzname_dst=machine_tz)
+        get_time_diff_from_tz(date_to_convert=date_to_convert, tzname_src=tzname, tzname_dst=machine_tz)
     ret: datetime.datetime = date_to_convert + time_dif
     return ret
 
