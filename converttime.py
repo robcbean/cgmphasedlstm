@@ -49,6 +49,13 @@ def convert_from_machine_to_tz(date_to_convert: datetime.datetime, tzname: str =
     ret: datetime.datetime = date_to_convert + time_dif
     return ret
 
+def convert_from_tz_to_machine(date_to_convert: datetime.datetime, tzname: str = "CET") -> datetime.datetime:
+    machine_tz: str = get_machine_tz()
+    time_dif: datetime.timedelta =\
+        get_diff_from_tz(date_to_convert=date_to_convert, tzname_src=tzname, tzname_dst=machine_tz)
+    ret: datetime.datetime = date_to_convert + time_dif
+    return ret
+
 def datetime_machine_to_utc(date_to_convert: datetime.datetime) -> datetime.datetime:
     ret: datetime.datetime = convert_to_utc(date_to_convert=date_to_convert, tzname=get_machine_tz())
     return ret
