@@ -46,7 +46,7 @@ def convert_from_machine_to_tz(date_to_convert: datetime.datetime, tzname: str =
     machine_tz: str = get_machine_tz()
     time_dif: datetime.timedelta =\
         get_diff_from_tz(date_to_convert=date_to_convert, tzname_src=machine_tz, tzname_dst=tzname)
-    ret: datetime.datetime = date_to_convert
+    ret: datetime.datetime = date_to_convert + time_dif
     return ret
 
 def datetime_machine_to_utc(date_to_convert: datetime.datetime) -> datetime.datetime:
