@@ -5,6 +5,7 @@
     "start_notification_time": "07:00",
     "end_notification_time": "00:01",
     "tz_data": "UTC",
+    "tz_schedule": "Europe/Madrid",
     "wait_time_icloud": 120,
     "glucose" :
     {
