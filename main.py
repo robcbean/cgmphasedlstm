@@ -190,17 +190,16 @@ class CgmPhasedLSTM:
     def start_proces(self):
         schedule.every(self.config.wait_time).seconds.until(self.get_until_schedule()).do(self.get_gluclose_values)
 
-
     def process_loop(self):
         self.prev_last_time = None
         self.last_time = None
         self.start_proces()
 
-        #TODO : Convert date 2 time
-        start_notification_fime: datetime.time \
-            = datetime.datetime.strptime(self.config.start_notification_time, "%H:%M").time()
-
-        schedule.every(1).day.at(self.config.start_notification_time).do(self.start_proces)
+        start_notification_date: datetime.datetime \
+            = datetime.datetime.strptime(self.config.start_notification_time, "%H:%M")
+        start_notification_date += converttime.get_time_diff_from_tz(tzname_src=converttime.get_machine_tz(),
+                                                                     tzname_dst=self.config.tz_schedule)
+        schedule.every(1).day.at(start_notification_date.strftime("%H:%M")).do(self.start_proces)
 
         while True:
             schedule.run_pending()
