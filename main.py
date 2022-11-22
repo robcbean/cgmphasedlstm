@@ -13,10 +13,10 @@ from freestyle import getmessages
 from phased_lstm import plstmglucosemodel
 from process_data.load_data import LoadData, loadScaler
 from telegram import sender
+import converttime
 from vault import credentials
 from logmessages.Log import LogMessages, MessageType
 import schedule
-from converttime import utc_to_display
 
 
 class CgmPhasedLSTM:
@@ -174,13 +174,27 @@ class CgmPhasedLSTM:
 
     def get_until_schedule(self) -> str:
         ret: str
-        end_mod_time: datetime.time = datetime.datetime.strptime(self.config.end_notification_time, "%H:%M").time()
-        cur_time: datetime.time = datetime.datetime.now().time()
+        converted_end_notification_time: str = self.convert_time_to_machine(self.config.end_notification_time)
+        end_mod_time: datetime.time = datetime.datetime.strptime(converted_end_notification_time, "%H:%M").time()
+        cur_data_time: datetime.datetime = datetime.datetime.now()
+        time_delta: datetime.timedelta = converttime.get_time_diff_from_tz(tzname_dst=self.config.tz_schedule
+                                                                           , tzname_src=converttime.get_machine_tz())
+        cur_data_time = cur_data_time + time_delta
+        cur_time: datetime.time = cur_data_time.time()
         next_date_str: str = datetime.date.strftime(datetime.datetime.today() + datetime.timedelta(days=1), "%Y-%m-%d")
         if end_mod_time < cur_time:
-            ret = f"{next_date_str} {self.config.end_notification_time}"
+            ret = f"{next_date_str} {converted_end_notification_time}"
         else:
-            ret = self.config.end_notification_time
+            ret = converted_end_notification_time
+        return ret
+
+    def convert_time_to_machine(self, time_to_convert: str) -> str:
+        start_notification_date: datetime.datetime \
+            = datetime.datetime.strptime(time_to_convert, "%H:%M")
+        start_notification_date += converttime.get_time_diff_from_tz(tzname_src=converttime.get_machine_tz(),
+                                                                     tzname_dst=self.config.tz_schedule)
+        ret: str = start_notification_date.strftime("%H:%M")
+
         return ret
 
     def start_proces(self):
@@ -190,7 +204,8 @@ class CgmPhasedLSTM:
         self.prev_last_time = None
         self.last_time = None
         self.start_proces()
-        schedule.every(1).day.at(self.config.start_notification_time).do(self.start_proces)
+        schedule.every(1).day.at(self.convert_time_to_machine(self.config.start_notification_time))\
+            .do(self.start_proces)
         while True:
             schedule.run_pending()
             time.sleep(1)
