@@ -133,7 +133,7 @@ class CgmPhasedLSTM:
     def glucose_in_range(self, _last_value, _pred_value):
         ret = True
         if _pred_value != 0:
-            variation = (_last_value - _pred_value) / _pred_value * 100
+            variation = abs((_last_value - _pred_value) / _pred_value * 100)
         else:
             variation = 0
 
