@@ -112,11 +112,13 @@ class CgmPhasedLSTM:
         return cgm_values_and_measures, cgm_time_pred, cgm_time
 
     def generate_image(self, _x_values_time, _y_values, _x_next_value, _y_next_value):
-        x_values = _x_values_time.values
-        x_values = np.insert(x_values, len(x_values), _x_next_value)
-        y_values = _y_values
-        y_values = np.insert(y_values, len(y_values), _y_next_value)
-        y_values = y_values.round(2)
+        x_values = list(_x_values_time.values)
+        x_values.append(_x_next_value)
+
+        y_values = list(_y_values)
+        y_values.append(_y_next_value)
+        #y_values = np.insert(y_values, len(y_values), _y_next_value)
+        y_values = list(np.array(y_values).round(2))
 
         plt.xlabel("Dia/Hora")
         plt.ylabel("Glucosa")
