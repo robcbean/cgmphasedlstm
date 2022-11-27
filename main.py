@@ -127,20 +127,16 @@ class CgmPhasedLSTM:
         x_values_df.to_csv(X_VALUES_CSV_FILE, sep=CSV_SEP, decimal=DEC_SEP, index=False)
 
     def generate_image(self, _x_values_time: np.ndarray, _y_values: np.ndarray
-                        , _x_next_value: pd.Timestamp, _y_next_value: np.ndarray
-                        , _src_tz: str = "UTC", _dst_tz="Europe/Madrid"):
+                       , _x_next_value: pd.Timestamp, _y_next_value: np.ndarray
+                       , _src_tz: str = "UTC", _dst_tz="Europe/Madrid"):
 
         if os.path.exists(IMAGE_FILE):
             os.remove(IMAGE_FILE)
 
         x_values: list = list(_x_values_time.values)
         x_values.append(pd.Timestamp.to_datetime64(_x_next_value))
-        #x_values = list(map(lambda x: x - converttime.get_time_diff_from_tz(tzname_src=_src_tz,tzname_dst=_dst_tz)
-        #                    , pd.to_datetime(x_values)))
-
         y_values: list = list(_y_values)
         y_values.append(_y_next_value)
-        #y_values = np.insert(y_values, len(y_values), _y_next_value)
         y_values = list(np.array(y_values).round(2))
 
         plt.xlabel("Dia/Hora")
@@ -245,7 +241,7 @@ class CgmPhasedLSTM:
 
     def get_gluclose_values(self):
         try:
-            self.log_messages.write_to_log(message="Procesing get_glucse_values", message_type=MessageType.MESSAGE)
+            self.log_messages.write_to_log(message="Processing get_glucose_values", message_type=MessageType.MESSAGE)
             data_c, data_s = self.cgs.get_last_result()
             xs, xt, xt_t = self.prepare_data(data_c, data_s)
             output = self.model.predict(xs, xt)
