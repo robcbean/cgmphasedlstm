@@ -123,8 +123,8 @@ class CgmPhasedLSTM:
         x_values_df: pd.DataFrame = pd.DataFrame(x_values)
         y_values_df: pd.DataFrame = pd.DataFrame(y_values)
 
-        y_values_df.to_csv(Y_VALUES_CSV_FILE, sep=CSV_SEP, decimal=DEC_SEP)
-        x_values_df.to_csv(X_VALUES_CSV_FILE, sep=CSV_SEP, decimal=DEC_SEP)
+        y_values_df.to_csv(Y_VALUES_CSV_FILE, sep=CSV_SEP, decimal=DEC_SEP, index=False)
+        x_values_df.to_csv(X_VALUES_CSV_FILE, sep=CSV_SEP, decimal=DEC_SEP, index=False)
 
     def generate_image(self, _x_values_time: np.ndarray, _y_values: np.ndarray
                         , _x_next_value: pd.Timestamp, _y_next_value: np.ndarray
@@ -153,6 +153,9 @@ class CgmPhasedLSTM:
         plt.plot(x_values, y_values)
         ret = IMAGE_FILE
         plt.savefig(ret)
+        plt.clf()
+        plt.cla()
+        plt.close()
 
         self.save_image_data(x_values=x_values, y_values=y_values)
 
