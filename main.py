@@ -153,6 +153,9 @@ class CgmPhasedLSTM:
         plt.plot(x_values, y_values)
         ret = IMAGE_FILE
         plt.savefig(ret)
+        plt.clf()
+        plt.cla()
+        plt.close()
 
         self.save_image_data(x_values=x_values, y_values=y_values)
 
