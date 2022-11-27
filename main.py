@@ -6,6 +6,7 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import torch
 
 import config
@@ -17,6 +18,12 @@ import converttime
 from vault import credentials
 from logmessages.Log import LogMessages, MessageType
 import schedule
+
+IMAGE_FILE: str = "image.png"
+X_VALUES_CSV_FILE: str = "x_values.csv"
+Y_VALUES_CSV_FILE: str = "y_values.csv"
+CSV_SEP = ";"
+DEC_SEP = ","
 
 
 class CgmPhasedLSTM:
@@ -111,11 +118,27 @@ class CgmPhasedLSTM:
 
         return cgm_values_and_measures, cgm_time_pred, cgm_time
 
-    def generate_image(self, _x_values_time, _y_values, _x_next_value, _y_next_value):
-        x_values = list(_x_values_time.values)
-        x_values.append(_x_next_value)
 
-        y_values = list(_y_values)
+    def save_image_data(self, x_values: np.ndarray, y_values: np.ndarray) -> None:
+        x_values_df: pd.DataFrame = pd.DataFrame(x_values)
+        y_values_df: pd.DataFrame = pd.DataFrame(y_values)
+
+        y_values_df.to_csv(Y_VALUES_CSV_FILE, sep=CSV_SEP, decimal=DEC_SEP)
+        x_values_df.to_csv(X_VALUES_CSV_FILE, sep=CSV_SEP, decimal=DEC_SEP)
+
+    def generate_image(self, _x_values_time: np.ndarray, _y_values: np.ndarray
+                        , _x_next_value: pd.Timestamp, _y_next_value: np.ndarray
+                        , _src_tz: str = "UTC", _dst_tz="Europe/Madrid"):
+
+        if os.path.exists(IMAGE_FILE):
+            os.remove(IMAGE_FILE)
+
+        x_values: list = list(_x_values_time.values)
+        x_values.append(pd.Timestamp.to_datetime64(_x_next_value))
+        #x_values = list(map(lambda x: x - converttime.get_time_diff_from_tz(tzname_src=_src_tz,tzname_dst=_dst_tz)
+        #                    , pd.to_datetime(x_values)))
+
+        y_values: list = list(_y_values)
         y_values.append(_y_next_value)
         #y_values = np.insert(y_values, len(y_values), _y_next_value)
         y_values = list(np.array(y_values).round(2))
@@ -126,9 +149,12 @@ class CgmPhasedLSTM:
         for i, j in zip(x_values, y_values):
             plt.annotate(str(j), xy=(i, j))
 
+
         plt.plot(x_values, y_values)
-        ret = "image.png"
+        ret = IMAGE_FILE
         plt.savefig(ret)
+
+        self.save_image_data(x_values=x_values, y_values=y_values)
 
         return ret
 
@@ -166,10 +192,12 @@ class CgmPhasedLSTM:
             os.path.join(
                 os.getcwd(),
                 self.generate_image(
-                    _xt_t,
-                    self.scaler.inverse_transform_value(np.transpose(_xs)[0]),
-                    next_time,
-                    _pred_value,
+                    _x_values_time=_xt_t,
+                    _y_values=self.scaler.inverse_transform_value(np.transpose(_xs)[0]),
+                    _x_next_value=next_time,
+                    _y_next_value=_pred_value,
+                    _src_tz="UTC",
+                    _dst_tz=self.config.tz_display
                 ),
             )
         )
