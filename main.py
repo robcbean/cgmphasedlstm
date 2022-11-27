@@ -256,7 +256,7 @@ class CgmPhasedLSTM:
             self.log_messages.write_to_log(message=message, message_type=MessageType.MESSAGE)
             if self.prev_last_time is None or self.last_time > self.prev_last_time:
                 pred_value = self.scaler.inverse_transform_value(output.item())[0]
-                out_message = f"\nLast value: {last_value} predd_value: {pred_value} " \
+                out_message = f"\nLast value: {last_value} pred_value: {pred_value} " \
                               f"at {self.calc_next_time(self.last_time)}"
                 self.log_messages.write_to_log(message=out_message,
                                                message_type=MessageType.MESSAGE)
