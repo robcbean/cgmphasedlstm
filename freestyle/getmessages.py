@@ -309,6 +309,7 @@ class GetMessageFreeStytle(GetMessages):
                 else:
                     generate_new_token = True
             if generate_new_token:
+                self.double_factor_manager.remove_file()
                 token_single_factor: str = self.__token_login_single_factor__()
                 token_send_mobile: str = self.__request_send_code_to_mobile__(token_single_factor)
                 time.sleep(120)
