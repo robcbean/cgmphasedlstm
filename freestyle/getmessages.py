@@ -14,8 +14,8 @@ from freestyle.icloudfile import DoubleFactorManager
 from logmessages.Log import LogMessages, MessageType
 import pytz
 
-TIME_TO_RETRY_ERROR_MESSAGE: int = 8
-MAX_NUMBER_ERRORS: int = 4
+TIME_TO_RETRY_ERROR_MESSAGE: int = 60
+MAX_NUMBER_ERRORS: int = 10
 
 
 class GetMessages:
@@ -332,7 +332,7 @@ class GetMessageFreeStytle(GetMessages):
                 self.log_message.write_to_log(message=str(ex), message_type=MessageType.ERROR)
                 if self.n_error_get_data < MAX_NUMBER_ERRORS:
                     self.n_error_get_data = self.n_error_get_data + 1
-                time.sleep(pow(self.n_error_get_data, TIME_TO_RETRY_ERROR_MESSAGE))
+                time.sleep(pow(2, self.n_error_get_data) * TIME_TO_RETRY_ERROR_MESSAGE)
 
         url_reports = self.__get_url_reports__(
             self.__report_url__(), self.__report_string__(), token_login
