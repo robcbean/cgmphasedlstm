@@ -83,3 +83,11 @@ class DoubleFactorManager:
         ret: int = self.get_code_from_file_content(file_content=file_content)
         self.log_messages.write_to_log(f"Code read {str(ret)}")
         return ret
+
+    def file_exists(self) -> bool:
+        ret: bool = True
+        try:
+            self.get_icloud_file()
+        except KeyError as ker:
+            ret = False
+        return ret

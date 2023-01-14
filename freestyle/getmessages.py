@@ -16,6 +16,7 @@ import pytz
 
 TIME_TO_RETRY_ERROR_MESSAGE: int = 60
 MAX_NUMBER_ERRORS: int = 10
+WAIT_SECONDS_ICLOUD_STEP: int = 10
 
 
 class GetMessages:
@@ -312,12 +313,18 @@ class GetMessageFreeStytle(GetMessages):
                 self.double_factor_manager.remove_file()
                 token_single_factor: str = self.__token_login_single_factor__()
                 token_send_mobile: str = self.__request_send_code_to_mobile__(token_single_factor)
-                time.sleep(120)
+                wait_seconds: int = 1
+                while not self.double_factor_manager.file_exists():
+                    self.log_message.write_to_log(message=f"File {self.ICLOUD_FILE} not yet ready.", message_type=MessageType.ERROR)
+                    time.sleep(wait_seconds)
+                    wait_seconds = wait_seconds + WAIT_SECONDS_ICLOUD_STEP
                 mobile_code: int = self.__get_mobile_code__()
                 token_double_factor: dict = self.__get_token_double_factor__(token_send_mobile, mobile_code)
                 self.__store__token_double__factor__(token_double_factor)
                 ret = token_double_factor['token']
         return ret
+
+
 
     def get_last_result(self):
 
