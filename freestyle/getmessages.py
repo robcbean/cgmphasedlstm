@@ -324,6 +324,8 @@ class GetMessageFreeStytle(GetMessages):
                 ret = token_double_factor['token']
         return ret
 
+
+
     def get_last_result(self):
 
         token_login: str = ""
