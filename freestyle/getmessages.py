@@ -183,9 +183,7 @@ class GetMessageFreeStytle(GetMessages):
         report_url_json = requests.get(url_lp).json()
 
         if "urls" in report_url_json["args"].keys():
-            repor
-
-            t_url = (
+            report_url = (
                     report_url_json["args"]["urls"]["10"] + "?session=" + _token_login
             )
             resport_result = requests.get(report_url)
@@ -318,12 +316,11 @@ class GetMessageFreeStytle(GetMessages):
                 self.double_factor_manager.remove_file()
                 token_single_factor: str = self.__token_login_single_factor__()
                 token_send_mobile: str = self.__request_send_code_to_mobile__(token_single_factor)
-                wait_seconds: int = 1
                 current_try: int = 1
                 while not self.double_factor_manager.file_exists() and current_try < MAX_NUMBER_WAITS_FILE:
                     self.log_message.write_to_log(message=f"File {self.ICLOUD_FILE} not yet ready.", message_type=MessageType.ERROR)
-                    time.sleep(wait_seconds)
-                    wait_seconds = wait_seconds + WAIT_SECONDS_ICLOUD_STEP * current_try
+                    time.sleep(WAIT_SECONDS_ICLOUD_STEP)
+                    #wait_seconds = wait_seconds + WAIT_SECONDS_ICLOUD_STEP * current_try
                     current_try = current_try + 1
                 if current_try == MAX_NUMBER_WAITS_FILE:
                     raise Exception(f"File {self.ICLOUD_FILE} not found")
