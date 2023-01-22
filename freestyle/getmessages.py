@@ -15,10 +15,10 @@ from logmessages.Log import LogMessages, MessageType
 import pytz
 
 TIME_TO_RETRY_ERROR_MESSAGE: int = 60
-MAX_NUMBER_ERRORS: int = 10
 
-MAX_NUMBER_WAITS_FILE: int = 20
-WAIT_SECONDS_ICLOUD_STEP: int = 10
+MAX_NUMBER_ERRORS: int = 5
+MAX_NUMBER_WAITS_FILE: int = 10
+WAIT_SECONDS_ICLOUD_STEP: int = 30
 
 
 class GetMessages:
@@ -157,6 +157,8 @@ class GetMessageFreeStytle(GetMessages):
         template_rended = template.render(today_date=today_date, start_date=start_date)
         ret = json.loads(template_rended)
         return ret
+
+
 
     def get_token_header(self, token: str) -> dict:
         token_header: dict = {"Authorization": "Bearer " + token}
@@ -315,16 +317,14 @@ class GetMessageFreeStytle(GetMessages):
                 self.double_factor_manager.remove_file()
                 token_single_factor: str = self.__token_login_single_factor__()
                 token_send_mobile: str = self.__request_send_code_to_mobile__(token_single_factor)
-                wait_seconds: int = 1
-
                 current_try: int = 1
                 while not self.double_factor_manager.file_exists() and current_try < MAX_NUMBER_WAITS_FILE:
                     self.log_message.write_to_log(message=f"File {self.ICLOUD_FILE} not yet ready.", message_type=MessageType.ERROR)
-                    time.sleep(wait_seconds)
-                    wait_seconds = wait_seconds + WAIT_SECONDS_ICLOUD_STEP * current_try
+                    time.sleep(WAIT_SECONDS_ICLOUD_STEP)
+                    #wait_seconds = wait_seconds + WAIT_SECONDS_ICLOUD_STEP * current_try
+                    current_try = current_try + 1
                 if current_try == MAX_NUMBER_WAITS_FILE:
                     raise Exception(f"File {self.ICLOUD_FILE} not found")
-                    
                 mobile_code: int = self.__get_mobile_code__()
                 token_double_factor: dict = self.__get_token_double_factor__(token_send_mobile, mobile_code)
                 self.__store__token_double__factor__(token_double_factor)
