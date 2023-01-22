@@ -15,6 +15,7 @@ from logmessages.Log import LogMessages, MessageType
 import pytz
 
 TIME_TO_RETRY_ERROR_MESSAGE: int = 60
+
 MAX_NUMBER_ERRORS: int = 5
 MAX_NUMBER_WAITS_FILE: int = 10
 WAIT_SECONDS_ICLOUD_STEP: int = 30
