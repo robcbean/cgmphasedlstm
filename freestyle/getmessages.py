@@ -157,6 +157,8 @@ class GetMessageFreeStytle(GetMessages):
         ret = json.loads(template_rended)
         return ret
 
+
+
     def get_token_header(self, token: str) -> dict:
         token_header: dict = {"Authorization": "Bearer " + token}
         return token_header
