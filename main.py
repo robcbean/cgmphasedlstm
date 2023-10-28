@@ -2,6 +2,7 @@
 import datetime
 import os
 import sys
+sys.path.append("../")
 import time
 
 import matplotlib.pyplot as plt
@@ -11,8 +12,10 @@ import torch
 
 import config
 from freestyle import getmessages
-from phased_lstm import plstmglucosemodel
-from process_data.load_data import LoadData, loadScaler
+from cgm_insulin_model.phased_lstm import plstmglucosemodel
+from cgm_insulin_model.process_data.load_data import LoadData, loadScaler
+from cgm_insulin_model.utils.string import  get_chars_only
+from cgm_insulin_model.constants.libreview import  INSULIN_COLUMN, GLUCOSE_COLUMN, GLUCOSE_SCAN_COLUMN
 from telegram import sender
 import converttime
 from vault import credentials
@@ -44,7 +47,8 @@ class CgmPhasedLSTM:
         self.config = config.loadFromFile(_config_file)
         self.model = self.load_model()
         self.scaler = loadScaler(
-            self.model.getModelName(), self.config.model.model_folder
+            model_name=self.model.getModelName(), model_folder=self.config.model.model_folder,
+            fields_to_scale=[get_chars_only(GLUCOSE_COLUMN),get_chars_only(GLUCOSE_SCAN_COLUMN),get_chars_only(INSULIN_COLUMN)]
         )
         self.cgs = getmessages.GetMessageFreeStytle(
             _past_values=self.config.model.past_values,
@@ -72,19 +76,19 @@ class CgmPhasedLSTM:
 
     def load_model(self):
         ret = plstmglucosemodel.PlstmGlucoseModel(
-            _input_dim=self.config.model.input_dim,
-            _batch_size=self.config.model.batch_size,
-            _hidden_dim=self.config.model.hidden_dim,
-            _outputl1=self.config.model.outputl1,
-            _outputl2=self.config.model.outputl2,
-            _dropout2=self.config.model.dropout2,
-            _dropout1=self.config.model.dropout1,
-            _exp_func=self.config.model.exp_func,
-            _use_lstm=self.config.model.use_lstm,
-            _past_values=self.config.model.past_values,
-            _batch_normalization=self.config.model.batch_normalization,
-            _nlf1=self.config.model.nlf1,
-            _nlf2=self.config.model.nlf2,
+            input_dim=self.config.model.input_dim,
+            batch_size=self.config.model.batch_size,
+            hidden_dim=self.config.model.hidden_dim,
+            outputl1=self.config.model.outputl1,
+            outputl2=self.config.model.outputl2,
+            dropout2=self.config.model.dropout2,
+            dropout1=self.config.model.dropout1,
+            exp_func=self.config.model.exp_func,
+            use_lstm=self.config.model.use_lstm,
+            past_values=self.config.model.past_values,
+            batch_normalization=self.config.model.batch_normalization,
+            nlf1=self.config.model.nlf1,
+            nlf2=self.config.model.nlf2,
         )
         filename = os.path.join(self.config.model.model_folder, ret.getModelName())
         if os.path.exists(filename):
